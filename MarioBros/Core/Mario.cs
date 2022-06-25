@@ -1,74 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Game.Elements;
+using MarioBros.Entities;
 
-namespace MarioBros.Elements.Objects
+namespace MarioBros.Core
 {
     public class Mario : Base, IGravity
     {
-        #region Objects
-        private MarioAction _action;
-        private Direction _direction;
+        #region Fields
+
+        #endregion
+        #region Events
 
         public event EventHandler Died;
+
         #endregion
+        #region Constructors
 
-        #region Constructor
-        public Mario(Elements.Resources resources, Data.BaseObject obj)
+        public Mario(Resources resources, BaseObject obj)
         {
+            var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
+
             base.Image = resources.SpriteSheet;
-
-            Size _recSize = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
-            SourceRec_Small_Stand = base.Create_Rectangles(_recSize, new Point(320, 640));
-            SourceRec_Small_Stop = base.Create_Rectangles(_recSize, new Point(384, 640));
-            SourceRec_Small_Walk = base.Create_Rectangles(_recSize, new Point(416, 640), new Point(320, 672), new Point(352, 672));
-            SourceRec_Small_Jump = base.Create_Rectangles(_recSize, new Point(384, 672));
-            SourceRec_Small_Dead = base.Create_Rectangles(_recSize, new Point(352, 640));
-            SourceRec_Small_Flag = base.Create_Rectangles(_recSize, new Point(320, 704));
-
-            Action_State = MarioAction.Idle;
-            Direction_State = Direction.Right;
-
-            this.FPS = 12;
-            this.Velocity = PointF.Empty;
-            this.MapPosition = new PointF(obj.X, (int)obj.Y - resources.Map_Data.Tileheight);
+            SourceRecSmallStand = base.CreateRectangles(_recSize, new Point(320, 640));
+            SourceRecSmallStop = base.CreateRectangles(_recSize, new Point(384, 640));
+            SourceRecSmallWalk = base.CreateRectangles(_recSize, new Point(416, 640), new Point(320, 672), new Point(352, 672));
+            SourceRecSmallJump = base.CreateRectangles(_recSize, new Point(384, 672));
+            SourceRecSmallDead = base.CreateRectangles(_recSize, new Point(352, 640));
+            SourceRecSmallFlag = base.CreateRectangles(_recSize, new Point(320, 704));
+            ActionState = MarioAction.Idle;
+            DirectionState = Direction.Right;
+            FPS = 12;
+            Velocity = PointF.Empty;
+            MapPosition = new PointF(obj.X, (int)obj.Y - resources.Map.TileHeight);
         }
         #endregion
-
         #region Properties
-        public MarioAction Action_State
+
+        private Rectangle[] SourceRecSmallStop { get; set; }
+        private Rectangle[] SourceRecSmallRun { get; set; }
+        private Rectangle[] SourceRecSmallStand { get; set; }
+        private Rectangle[] SourceRecSmallWalk { get; set; }
+        private Rectangle[] SourceRecSmallJump { get; set; }
+        private Rectangle[] SourceRecSmallDead { get; set; }
+        private Rectangle[] SourceRecSmallFlag { get; set; }
+
+        public MarioAction ActionState
         {
-            get { return _action; }
+            get { return _actionState; }
             set
             {
-                _action = value;
+                _actionState = value;
                 SetSourceRectangle();
             }
         }
+        private MarioAction _actionState;
+
         /// <summary>
         /// Direccion hacia donde mira el personaje
         /// </summary>
-        new public Direction Direction_State
+        new public Direction DirectionState
         {
-            get { return _direction; }
+            get { return _directionState; }
             set
             {
-                _direction = value;
+                _directionState = value;
                 SetSourceRectangle();
             }
         }
+        private Direction _directionState;
 
-        private Rectangle[] SourceRec_Small_Stop { get; set; }
-        private Rectangle[] SourceRec_Small_Run { get; set; }
-        private Rectangle[] SourceRec_Small_Stand { get; set; }
-        private Rectangle[] SourceRec_Small_Walk { get; set; }
-        private Rectangle[] SourceRec_Small_Jump { get; set; }
-        private Rectangle[] SourceRec_Small_Dead { get; set; }
-        private Rectangle[] SourceRec_Small_Flag { get; set; }
         #endregion
 
         #region Methods
@@ -78,18 +78,18 @@ namespace MarioBros.Elements.Objects
         private void SetSourceRectangle()
         {
             // dependiendo el estado nuevo del perosnaje reasigna el array de rectangulo que corresponda a SourceRectangle para que se dibuje correctamente
-            if (Action_State == MarioAction.Idle)
-                SourceRectangles = SourceRec_Small_Stand;
-            else if (Action_State == MarioAction.Walk)
-                SourceRectangles = SourceRec_Small_Walk;
-            else if (Action_State == MarioAction.Stop)
-                SourceRectangles = SourceRec_Small_Stop;
-            else if (Action_State == MarioAction.Jump || Action_State == MarioAction.Falling)
-                SourceRectangles = SourceRec_Small_Jump;
-            else if (Action_State == MarioAction.Die)
-                SourceRectangles = SourceRec_Small_Dead;
-            else if (Action_State == MarioAction.Flag)
-                SourceRectangles = SourceRec_Small_Flag;
+            if (ActionState == MarioAction.Idle)
+                SourceRectangles = SourceRecSmallStand;
+            else if (ActionState == MarioAction.Walk)
+                SourceRectangles = SourceRecSmallWalk;
+            else if (ActionState == MarioAction.Stop)
+                SourceRectangles = SourceRecSmallStop;
+            else if (ActionState == MarioAction.Jump || ActionState == MarioAction.Falling)
+                SourceRectangles = SourceRecSmallJump;
+            else if (ActionState == MarioAction.Die)
+                SourceRectangles = SourceRecSmallDead;
+            else if (ActionState == MarioAction.Flag)
+                SourceRectangles = SourceRecSmallFlag;
 
             ResetAnimation();
         }
@@ -98,7 +98,7 @@ namespace MarioBros.Elements.Objects
         /// </summary>
         public void MoveCharacter()
         {
-            if (this.Action_State == MarioAction.Die)
+            if (ActionState == MarioAction.Die)
                 return;
 
             float _aceleration = 0.2f;
@@ -127,18 +127,18 @@ namespace MarioBros.Elements.Objects
                 if (Velocity.X < _maxAceleration)
                     Velocity = new PointF(Velocity.X + _aceleration, Velocity.Y);
 
-                if ((Action_State != MarioAction.Jump && Action_State != MarioAction.Falling))
+                if ((ActionState != MarioAction.Jump && ActionState != MarioAction.Falling))
                 {
-                    if (Direction_State != Direction.Right)
-                        Direction_State = Direction.Right;
+                    if (DirectionState != Direction.Right)
+                        DirectionState = Direction.Right;
 
                     if (Velocity.X <= 0)
                     {
-                        if (Action_State != MarioAction.Stop)
-                            Action_State = MarioAction.Stop;
+                        if (ActionState != MarioAction.Stop)
+                            ActionState = MarioAction.Stop;
                     }
-                    else if (Action_State != MarioAction.Walk)
-                        Action_State = MarioAction.Walk;
+                    else if (ActionState != MarioAction.Walk)
+                        ActionState = MarioAction.Walk;
                 }
             }
             #endregion
@@ -149,39 +149,39 @@ namespace MarioBros.Elements.Objects
                 if (Velocity.X > -_maxAceleration)
                     Velocity = new PointF(Velocity.X - _aceleration, Velocity.Y);
 
-                if ((Action_State != MarioAction.Jump && Action_State != MarioAction.Falling))
+                if ((ActionState != MarioAction.Jump && ActionState != MarioAction.Falling))
                 {
-                    if (Direction_State != Direction.Left)
-                        Direction_State = Direction.Left;
+                    if (DirectionState != Direction.Left)
+                        DirectionState = Direction.Left;
 
                     if (Velocity.X > 0)
                     {
-                        if (Action_State != MarioAction.Stop)
-                            Action_State = MarioAction.Stop;
+                        if (ActionState != MarioAction.Stop)
+                            ActionState = MarioAction.Stop;
                     }
-                    else if (Action_State != MarioAction.Walk)
-                        Action_State = MarioAction.Walk;
+                    else if (ActionState != MarioAction.Walk)
+                        ActionState = MarioAction.Walk;
                 }
             }
             #endregion
 
             #region JUMP
-            if (Elements.Keyboard.Jump && (Action_State != MarioAction.Jump && Action_State != MarioAction.Falling))
+            if (Elements.Keyboard.Jump && (ActionState != MarioAction.Jump && ActionState != MarioAction.Falling))
             {
-                Action_State = MarioAction.Jump;
+                ActionState = MarioAction.Jump;
                 float _jAaceleration = Elements.Keyboard.Turbo ? 24 : 20;
                 Velocity = new PointF(Velocity.X, -_jAaceleration);
             }
 
-            if (Action_State == MarioAction.Falling && Velocity.Y == 0)
-                Action_State = Velocity.X != 0 ? MarioAction.Walk : MarioAction.Stop;
+            if (ActionState == MarioAction.Falling && Velocity.Y == 0)
+                ActionState = Velocity.X != 0 ? MarioAction.Walk : MarioAction.Stop;
 
-            if (Action_State == MarioAction.Jump && Velocity.Y >= 0)
-                Action_State = MarioAction.Falling;
+            if (ActionState == MarioAction.Jump && Velocity.Y >= 0)
+                ActionState = MarioAction.Falling;
             #endregion
 
             #region STOP WALK
-            if (Action_State != MarioAction.Jump && !Elements.Keyboard.Right && !Elements.Keyboard.Left) // deja de caminar
+            if (ActionState != MarioAction.Jump && !Elements.Keyboard.Right && !Elements.Keyboard.Left) // deja de caminar
             {
                 float _velX = (Velocity.X > 0 ? -(_aceleration * 2) : Velocity.X < 0 ? (_aceleration * 2) : 0) + Velocity.X;
                 if (Math.Abs(Velocity.X) < (_aceleration * 2)) _velX = 0;
@@ -191,8 +191,8 @@ namespace MarioBros.Elements.Objects
             #endregion
 
             #region IDLE
-            if (Action_State != MarioAction.Jump && Action_State != MarioAction.Falling && Action_State != MarioAction.Idle && Velocity.X == 0) // retorna a estado de espera
-                Action_State = MarioAction.Idle;
+            if (ActionState != MarioAction.Jump && ActionState != MarioAction.Falling && ActionState != MarioAction.Idle && Velocity.X == 0) // retorna a estado de espera
+                ActionState = MarioAction.Idle;
             #endregion
         }
         /// <summary>
@@ -200,16 +200,16 @@ namespace MarioBros.Elements.Objects
         /// </summary>
         public void Kill()
         {
-            this.Action_State = MarioAction.Die; // cambia el estado para mostrar el sprite correspondiente
-            this.Velocity = new PointF(Velocity.X, -20); // cambia velocidad para mostrar el salto de muerte
-            this.Died(this, EventArgs.Empty); // notifica al controlador del juego que mario murio para cambiar el estado del juego
+            ActionState = MarioAction.Die; // cambia el estado para mostrar el sprite correspondiente
+            Velocity = new PointF(Velocity.X, -20); // cambia velocidad para mostrar el salto de muerte
+            Died(this, EventArgs.Empty); // notifica al controlador del juego que mario murio para cambiar el estado del juego
         }
         #endregion
 
         #region Update
         public override void Update(GameTime gameTime)
         {
-            this.MoveCharacter();
+            MoveCharacter();
 
             base.Update(gameTime);
         }
@@ -218,7 +218,7 @@ namespace MarioBros.Elements.Objects
         #region Draw
         public override void Draw(DrawHandler drawHandler)
         {
-            drawHandler.Draw(base.Image, base.SourceRectangle, (int)base.Position.X, (int)base.Position.Y, Direction_State == Direction.Left);
+            drawHandler.Draw(base.Image, base.SourceRectangle, (int)base.Position.X, (int)base.Position.Y, DirectionState == Direction.Left);
         }
         #endregion
     }

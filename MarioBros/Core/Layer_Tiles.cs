@@ -21,8 +21,8 @@ namespace MarioBros.Elements.Map
             base.Position = Point.Empty;
             base.Image = resources.SpriteSheet;
 
-            this.Tile_Size = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
-            this.Size = new Size(resources.Map_Data.Width, resources.Map_Data.Height);
+            Tile_Size = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
+            Size = new Size(resources.Map_Data.Width, resources.Map_Data.Height);
 
             #region Carga los tiles del mapa
             Tiles = new Dictionary<int, Rectangle>();
@@ -49,7 +49,7 @@ namespace MarioBros.Elements.Map
 
             // Tamaño en cantidad de celdas que son visibles en la pantalla
             var _viewPortSize = new Size((int)Math.Ceiling((float)canvasSize.Width / (float)Tile_Size.Width), (int)Math.Ceiling((float)canvasSize.Height / (float)Tile_Size.Height));
-            this.ViewPort = new Size(Math.Min(_viewPortSize.Width + 1, Size.Width), Math.Min(_viewPortSize.Height, Size.Height));
+            ViewPort = new Size(Math.Min(_viewPortSize.Width + 1, Size.Width), Math.Min(_viewPortSize.Height, Size.Height));
         }
         #endregion
 
@@ -85,7 +85,7 @@ namespace MarioBros.Elements.Map
             for (int x = _startX; x < _startX + ViewPort.Width; x++)
                 for (int y = _startY; y < _startY + ViewPort.Height; y++)
                 {
-                    if (x >= 0 && x < this.Size.Width)
+                    if (x >= 0 && x < Size.Width)
                     {
                         int _id = Matrix[y, x];
                         if (_id != 0)

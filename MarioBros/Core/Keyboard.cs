@@ -23,11 +23,11 @@ namespace Game.Elements
         #region Methods
         public void SetKey(Keys key)
         {
-            if (key == Keys.Left) this.Left = true;
-            if (key == Keys.Right) this.Right = true;
-            if (key == Keys.Up) this.Up = true;
-            if (key == Keys.Down) this.Down = true;
-            if (key == Keys.Space) this.Space = true;
+            if (key == Keys.Left) Left = true;
+            if (key == Keys.Right) Right = true;
+            if (key == Keys.Up) Up = true;
+            if (key == Keys.Down) Down = true;
+            if (key == Keys.Space) Space = true;
         }
         /// <summary>
         /// Limpia las teclas seleccionada

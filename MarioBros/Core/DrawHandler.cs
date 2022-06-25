@@ -9,12 +9,17 @@ namespace MarioBros.Core
     /// </summary>
     public class DrawHandler : IDisposable
     {
+        #region Constructores
+
         public DrawHandler(int width, int height)
         {
             BaseImage = new Bitmap(width, height);
             Graphics = Graphics.FromImage(BaseImage);
             Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
         }
+
+        #endregion
+        #region Properties
 
         /// <summary>
         /// Imagen base sobre la cual se dibujan las demas imagenes
@@ -26,11 +31,8 @@ namespace MarioBros.Core
         /// </summary>
         private Graphics Graphics { get; set; }
 
-        public void Dispose()
-        {
-            Graphics.Dispose();
-            BaseImage = null;
-        }
+        #endregion
+        #region Methods
 
         /// <summary>
         /// Dibuja una imagen en pantalla
@@ -67,16 +69,31 @@ namespace MarioBros.Core
             if (flipH)
             {
                 var _image = new Bitmap(rectangle.Width, rectangle.Height); // obtengo la imagen del rectangulo
-                using (var _graphics = System.Drawing.Graphics.FromImage(_image))
+
+                using (var _graphics = Graphics.FromImage(_image))
                 {
                     _graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                     _graphics.DrawImage(image, 0, 0, rectangle, GraphicsUnit.Pixel);
-                } 
+                }
+
                 _image.RotateFlip(RotateFlipType.RotateNoneFlipX);
                 Graphics.DrawImage(_image, x, y);
             }
             else
+            {
                 Graphics.DrawImage(image, x, y, rectangle, GraphicsUnit.Pixel);
+            }
         }
+
+        #endregion
+        #region IDisposable
+
+        public void Dispose()
+        {
+            Graphics.Dispose();
+            BaseImage = null;
+        }
+
+        #endregion
     }
 }

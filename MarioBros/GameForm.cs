@@ -41,12 +41,12 @@ namespace Game
                 _gameTime.FrameDate = _now;
 
                 Application.DoEvents();
-                this.Update(_gameTime);  // ejecuta logica propia del juego
-                this.Keyboard.Clear();
+                Update(_gameTime);  // ejecuta logica propia del juego
+                Keyboard.Clear();
 
-                using (DrawHandler drawHandler = new DrawHandler(this.Canvas.Width, this.Canvas.Height))
+                using (DrawHandler drawHandler = new DrawHandler(Canvas.Width, Canvas.Height))
                 {
-                    this.Draw(drawHandler);    // Actualiza la imagen en cada cuadro
+                    Draw(drawHandler);    // Actualiza la imagen en cada cuadro
                     Canvas.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
                 }
             };
@@ -72,7 +72,7 @@ namespace Game
         }
         private void Game_KeyDown(object sender, KeyEventArgs e)
         {
-            this.Keyboard.SetKey(e.KeyData);
+            Keyboard.SetKey(e.KeyData);
         }
         #endregion
 

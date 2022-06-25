@@ -65,16 +65,16 @@ namespace MarioBros.Elements.Map
             else if (State == GameState.Wining)
                 Update_Winning(gameTime);
 
-            if (Layer_Objects.Mario.Position.Y > (this._canvasSize.Height * 2))
-                this.Restart(null, EventArgs.Empty);
+            if (Layer_Objects.Mario.Position.Y > (_canvasSize.Height * 2))
+                Restart(null, EventArgs.Empty);
             // si mario se cae a un poso o completa el mapa, se reinicia 
         }
         private void Update_Playing(GameTime gameTime)
         {
-            _canvasRec = new RectangleF(this.Layer_Tiles.Position.X, this.Layer_Tiles.Position.Y, _canvasSize.Width, _canvasSize.Height);
+            _canvasRec = new RectangleF(Layer_Tiles.Position.X, Layer_Tiles.Position.Y, _canvasSize.Width, _canvasSize.Height);
 
             var lstRemove = new List<Base>();
-            this.Layer_Objects.MapObjects.ForEach(obj =>
+            Layer_Objects.MapObjects.ForEach(obj =>
             {
                 if (obj is IGravity)
                 {
@@ -94,20 +94,20 @@ namespace MarioBros.Elements.Map
                     lstRemove.Add(obj);
             });
 
-            lstRemove.ForEach(x => this.Layer_Objects.MapObjects.Remove(x)); // remueve de la lista los objetos descartados
-            this.Layer_Objects.MapObjectsNew.ForEach(x => this.Layer_Objects.MapObjects.Add(x)); // se agregan los objetos nuevos creados en el transcurso del juego, en este ejemplo las monedas
-            this.Layer_Objects.MapObjectsNew.Clear();
+            lstRemove.ForEach(x => Layer_Objects.MapObjects.Remove(x)); // remueve de la lista los objetos descartados
+            Layer_Objects.MapObjectsNew.ForEach(x => Layer_Objects.MapObjects.Add(x)); // se agregan los objetos nuevos creados en el transcurso del juego, en este ejemplo las monedas
+            Layer_Objects.MapObjectsNew.Clear();
 
             Move_Character();
             Update_ObjectPosition();
 
-            if (this.Layer_Objects.Mario.MapPosition.X + (this.Layer_Objects.Mario.SourceRectangle.Width / 2) >= this.Layer_Objects.Flag.X)
+            if (Layer_Objects.Mario.MapPosition.X + (Layer_Objects.Mario.SourceRectangle.Width / 2) >= Layer_Objects.Flag.X)
             {
-                var mario = this.Layer_Objects.Mario;
+                var mario = Layer_Objects.Mario;
                 mario.Action_State = MarioAction.Flag;
-                mario.MapPosition = new PointF(this.Layer_Objects.Flag.X - 10, mario.MapPosition.Y);
+                mario.MapPosition = new PointF(Layer_Objects.Flag.X - 10, mario.MapPosition.Y);
                 mario.Velocity = new PointF(0, 0);
-                this.State = GameState.Wining;
+                State = GameState.Wining;
                 // si mario llega a la bandera cambia el estado del juego
             }
         }
@@ -142,7 +142,7 @@ namespace MarioBros.Elements.Map
             Update_ObjectPosition(mario); // actualiza la posicion en el mapa solo de mario 
 
             if (mario.MapPosition.X >= ((Layer_Tiles.Size.Width - 1) * Layer_Tiles.Tile_Size.Width))
-                this.Restart(null, EventArgs.Empty); // reinicia el mapa
+                Restart(null, EventArgs.Empty); // reinicia el mapa
         }
         #endregion
 
@@ -153,8 +153,8 @@ namespace MarioBros.Elements.Map
         /// <param name="drawHandler"></param>
         public void Draw(DrawHandler drawHandler)
         {
-            this.Layer_Tiles.Draw(drawHandler);
-            this.Layer_Objects.Draw(drawHandler);
+            Layer_Tiles.Draw(drawHandler);
+            Layer_Objects.Draw(drawHandler);
         }
         #endregion
 
@@ -164,10 +164,10 @@ namespace MarioBros.Elements.Map
         /// </summary>
         private void Update_ObjectPosition(Base mapObject = null)
         {
-            var lstObjects = mapObject != null ? new List<Base>() { mapObject } : this.Layer_Objects.MapObjects;
+            var lstObjects = mapObject != null ? new List<Base>() { mapObject } : Layer_Objects.MapObjects;
             lstObjects.ForEach(obj =>
             {
-                obj.Position = new PointF(obj.MapPosition.X - this.Layer_Tiles.Position.X, obj.MapPosition.Y - this.Layer_Tiles.Position.Y);
+                obj.Position = new PointF(obj.MapPosition.X - Layer_Tiles.Position.X, obj.MapPosition.Y - Layer_Tiles.Position.Y);
             });
         }
         /// <summary>
@@ -175,34 +175,34 @@ namespace MarioBros.Elements.Map
         /// </summary>
         private void Move_Character()
         {
-            if (this.Layer_Objects.Mario.Position.X > _canvasSize.Width / 2)
+            if (Layer_Objects.Mario.Position.X > _canvasSize.Width / 2)
             {
-                var difX = this.Layer_Objects.Mario.Position.X - (float)_canvasSize.Width / 2f;
-                this.Layer_Tiles.Position = new PointF(this.Layer_Tiles.Position.X + (float)difX, this.Layer_Tiles.Position.Y);
+                var difX = Layer_Objects.Mario.Position.X - (float)_canvasSize.Width / 2f;
+                Layer_Tiles.Position = new PointF(Layer_Tiles.Position.X + (float)difX, Layer_Tiles.Position.Y);
 
-                int _maxPositionWidth = this.Layer_Tiles.Size.Width * this.Layer_Tiles.Tile_Size.Width - _canvasSize.Width;
-                if (this.Layer_Tiles.Position.X > _maxPositionWidth)
-                    this.Layer_Tiles.Position = new PointF(_maxPositionWidth, this.Layer_Tiles.Position.Y); // limita el desplazamiento del hasta el borde del mapa
+                int _maxPositionWidth = Layer_Tiles.Size.Width * Layer_Tiles.Tile_Size.Width - _canvasSize.Width;
+                if (Layer_Tiles.Position.X > _maxPositionWidth)
+                    Layer_Tiles.Position = new PointF(_maxPositionWidth, Layer_Tiles.Position.Y); // limita el desplazamiento del hasta el borde del mapa
 
                 Update_ObjectPosition();
             }
-            else if (this.Layer_Objects.Mario.Position.X < 0)
-                this.Layer_Objects.Mario.MapPosition = new PointF(this.Layer_Tiles.Position.X, this.Layer_Objects.Mario.MapPosition.Y); // evita que el personaje se salga del margen izquierdo de la pantalla
+            else if (Layer_Objects.Mario.Position.X < 0)
+                Layer_Objects.Mario.MapPosition = new PointF(Layer_Tiles.Position.X, Layer_Objects.Mario.MapPosition.Y); // evita que el personaje se salga del margen izquierdo de la pantalla
         }
         private void Objects_MapPositionChanged(object sender, PositionEventArgs e)
         {
             if (State == GameState.Playing || State == GameState.Wining)
             {
                 // valida la colicion del objeto con las celdas bloqueadas del mapa
-                this.Layer_Obstacles.Valid_Colition((Elements.Objects.Base)sender, e.Previous);
+                Layer_Obstacles.Valid_Colition((Elements.Objects.Base)sender, e.Previous);
 
                 // valida la colicion del objeto con otros objetos 
-                this.Layer_Objects.Valid_Colition((Elements.Objects.Base)sender, e.Previous);
+                Layer_Objects.Valid_Colition((Elements.Objects.Base)sender, e.Previous);
             }
         }
         private void Mario_Died(object sender, EventArgs e)
         {
-            this.State = GameState.Dying; // al detectar que mario murio, cambia el estado del juego
+            State = GameState.Dying; // al detectar que mario murio, cambia el estado del juego
         }
         #endregion
 

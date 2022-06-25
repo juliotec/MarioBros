@@ -1,48 +1,45 @@
-﻿using Game.Elements;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
+using MarioBros.Entities;
 
-namespace MarioBros.Elements.Objects
+namespace MarioBros.Core
 {
     public class Coin : Base, IGravity
     {
-        #region Objects
+        #region Fields
+
         private PointF? _originalPosition;
-        #endregion
 
-        #region Constructor
-        public Coin(Elements.Resources resources)
+        #endregion
+        #region Constructors
+
+        public Coin(Resources resources)
         {
+            var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
+
             base.Image = resources.SpriteSheet;
-
-            Size _recSize = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
-            SourceRectangles = base.Create_Rectangles(_recSize,
-                new Point(256, 192),
-                new Point(288, 192),
-                new Point(320, 192),
-                new Point(352, 192)
-            );
-
-            this.Velocity = new PointF(0, -20);
-            this.FPS = 6;
+            SourceRectangles = base.CreateRectangles(_recSize, new Point(256, 192), new Point(288, 192), new Point(320, 192), new Point(352, 192));
+            Velocity = new PointF(0, -20);
+            FPS = 6;
         }
-        #endregion
 
-        #region Update
+        #endregion
+        #region Base
+
         public override void Update(GameTime gameTime)
         {
             if (_originalPosition == null)
-                _originalPosition = this.MapPosition;
+            {
+                _originalPosition = MapPosition;
+            }
 
-            if (this.MapPosition.Y > _originalPosition.Value.Y)
-                this.Removing = true;
+            if (MapPosition.Y > _originalPosition.Value.Y)
+            {
+                Removing = true;
+            }
 
             base.Update(gameTime);
         }
+
         #endregion
     }
 }

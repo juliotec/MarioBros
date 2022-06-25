@@ -1,42 +1,36 @@
-﻿using Game.Elements;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
+using MarioBros.Entities;
 
-namespace MarioBros.Elements.Objects
+namespace MarioBros.Core
 {
     public class Goomba : Base, IGravity
     {
-        #region Objects
+        #region Fields
+
         private GoombaState _state;
         private int miliseconsDying;
-        #endregion
 
-        #region Constructor
-        public Goomba(Elements.Resources resources, Data.BaseObject obj)
+        #endregion
+        #region Constructors
+
+        public Goomba(Resources resources, BaseObject obj)
         {
+            var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
+
             base.Image = resources.SpriteSheet;
-
-            Size _recSize = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
-            SourceRec_Normal = base.Create_Rectangles(_recSize,
-                new Point(0, 480),
-                new Point(32, 480)
-            );
-            SourceRec_Dying = base.Create_Rectangles(_recSize, new Point(64, 480));
-
-            this.MapPosition = new PointF(obj.X, (int)obj.Y - resources.Map_Data.Tileheight);
-            this.Velocity = new PointF(-2, 0);
-            this.FPS = 6;
-            this.State = GoombaState.Normal;
+            SourceRecNormal = base.CreateRectangles(_recSize, new Point(0, 480), new Point(32, 480));
+            SourceRecDying = base.CreateRectangles(_recSize, new Point(64, 480));
+            MapPosition = new PointF(obj.X, (int)obj.Y - resources.Map.TileHeight);
+            Velocity = new PointF(-2, 0);
+            FPS = 6;
+            State = GoombaState.Normal;
         }
-        #endregion
 
+        #endregion
         #region Properties
-        private Rectangle[] SourceRec_Normal { get; set; }
-        private Rectangle[] SourceRec_Dying { get; set; }
+
+        private Rectangle[] SourceRecNormal { get; set; }
+        private Rectangle[] SourceRecDying { get; set; }
 
         public GoombaState State
         {
@@ -45,16 +39,18 @@ namespace MarioBros.Elements.Objects
             {
                 _state = value;
                 base.ResetAnimation();
-                SourceRectangles = value == GoombaState.Normal ? SourceRec_Normal : SourceRec_Dying;
+                SourceRectangles = value == GoombaState.Normal ? SourceRecNormal : SourceRecDying;
             }
         }
-        #endregion
 
-        #region Methods
-        public override void Check_Collision(Base obj, PointF prevPosition)
+        #endregion
+        #region Base
+        public override void CheckCollision(Base obj, PointF prevPosition)
         {
-            if (this.State == GoombaState.Dying)
+            if (State == GoombaState.Dying)
+            {
                 return;
+            }
 
             var difPosition = new PointF(obj.MapPosition.X - prevPosition.X, obj.MapPosition.Y - prevPosition.Y); // diferencia entre la posicion actual y anterior
 
@@ -63,17 +59,17 @@ namespace MarioBros.Elements.Objects
                 var mario = (Mario)obj;
                 if (difPosition.Y != 0) // si existe solo colicion vertical
                 {
-                    this.State = GoombaState.Dying;
-                    this.Velocity = PointF.Empty;
+                    State = GoombaState.Dying;
+                    Velocity = PointF.Empty;
 
-                    mario.Action_State = MarioAction.Jump;
+                    mario.ActionState = MarioAction.Jump;
                     mario.Velocity = new PointF(obj.Velocity.X, -15); // rebota mario bros
                 }
                 else
                     mario.Kill(); // asesina a mario
             }
             else if (obj is Box || obj is Brick)
-                this.MapPosition = new PointF(this.MapPosition.X, obj.MapPosition.Y - obj.SourceRectangle.Height);
+                MapPosition = new PointF(MapPosition.X, obj.MapPosition.Y - obj.SourceRectangle.Height);
             else
                 obj.Velocity = new PointF(-obj.Velocity.X, obj.Velocity.Y); // cambienza a caminar en direccion contraria
         }
@@ -82,7 +78,7 @@ namespace MarioBros.Elements.Objects
         #region Update
         public override void Update(GameTime gameTime)
         {
-            if (this.State == GoombaState.Dying)
+            if (State == GoombaState.Dying)
             {
                 // contador antes de desaparecer
                 miliseconsDying += gameTime.FrameMilliseconds;

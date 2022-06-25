@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MarioBros</RootNamespace>
     <AssemblyName>MarioBros</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -65,9 +66,9 @@
     <Compile Include="Entities\BaseObject.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Entities\Keyboard.cs" />
-    <Compile Include="Element\Mapas\Layer_Obstacles.cs" />
-    <Compile Include="Element\Mapas\Layer_Tiles.cs" />
-    <Compile Include="Element\Mapas\MapHandler.cs" />
+    <Compile Include="Core\Layer_Obstacles.cs" />
+    <Compile Include="Core\Layer_Tiles.cs" />
+    <Compile Include="Core\MapHandler.cs" />
     <Compile Include="Core\Base.cs" />
     <Compile Include="Core\Coin.cs" />
     <Compile Include="Core\IGravity.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Core\Goomba.cs" />
     <Compile Include="Core\Box.cs" />
     <Compile Include="Core\Brick.cs" />
-    <Compile Include="Element\Mapas\Layer_Objects.cs" />
+    <Compile Include="Core\Layer_Objects.cs" />
     <Compile Include="Core\Mario.cs" />
     <Compile Include="Entities\Resources.cs" />
     <Compile Include="Entities\Enums.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Assets\Level_1_1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

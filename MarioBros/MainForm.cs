@@ -40,7 +40,7 @@ namespace MarioBros
                 Map = Newtonsoft.Json.JsonConvert.DeserializeObject<Map>(Load_Text($"{directory}/Level_1_1.json"))
             };
 
-            Canvas.BackColor = System.Drawing.ColorTranslator.FromHtml(this.Resources.Map.BackgroundColor);
+            Canvas.BackColor = System.Drawing.ColorTranslator.FromHtml(Resources.Map.BackgroundColor);
             InitializeMap();
         }
         /// <summary>
@@ -48,7 +48,7 @@ namespace MarioBros
         /// </summary>
         private void InitializeMap()
         {
-            MapHandler = new Elements.Map.MapHandler(Resources, this.Canvas.Size);
+            MapHandler = new Elements.Map.MapHandler(Resources, Canvas.Size);
             MapHandler.Restart += (obj, e) => InitializeMap(); // reinicia el mapa
         }
         #endregion
@@ -91,7 +91,7 @@ namespace MarioBros
         #region Update
         protected override void Update(GameTime gameTime)
         {
-            this.MapHandler.Update(gameTime);
+            MapHandler.Update(gameTime);
         }
         #endregion
 
@@ -102,7 +102,7 @@ namespace MarioBros
         /// <param name="drawHandler"></param>
         public override void Draw(DrawHandler drawHandler)
         {
-            this.MapHandler.Draw(drawHandler);
+            MapHandler.Draw(drawHandler);
         }
         #endregion
 

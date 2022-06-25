@@ -18,7 +18,7 @@ namespace MarioBros.Elements.Map
         #region Constructor
         public Layer_Objects(Elements.Resources resources, Size canvasSize)
         {
-            this._canvasSize = canvasSize;
+            _canvasSize = canvasSize;
             base.Image = resources.SpriteSheet;
             var _layer = resources.Map_Data.Layers.First(x => x.Name == "Objects");
 
@@ -111,7 +111,7 @@ namespace MarioBros.Elements.Map
         #region Methods
         public void Valid_Colition(Elements.Objects.Base obj, PointF prevPosition)
         {
-            var objTargets = this.MapObjects.Where(x => !x.Equals(obj) && x.MapPositionRec.IntersectsWith(obj.MapPositionRec)).ToList();
+            var objTargets = MapObjects.Where(x => !x.Equals(obj) && x.MapPositionRec.IntersectsWith(obj.MapPositionRec)).ToList();
             if (objTargets.Any())
             {
                 foreach (var item in objTargets)

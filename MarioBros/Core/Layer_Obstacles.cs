@@ -12,8 +12,8 @@ namespace MarioBros.Elements.Map
         #region Constructor
         public Layer_Obstacles(Elements.Resources resources)
         {
-            this.Tile_Size = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
-            this.Size = new Size(resources.Map_Data.Width, resources.Map_Data.Height);
+            Tile_Size = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
+            Size = new Size(resources.Map_Data.Width, resources.Map_Data.Height);
 
             var layerTiles = resources.Map_Data.Layers.FirstOrDefault(x => x.Name == "Obstacles");
             Matrix = new bool[layerTiles.Height, layerTiles.Width];

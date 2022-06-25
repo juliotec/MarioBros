@@ -10,7 +10,6 @@ namespace MarioBros.Core
         
         private int _index = 0; // numero que indica el cuadro actual de la animacion que se dibujara
         private int _milisec = 0; // variable auxiliar que suma los milisegundos transcurridos en cada iteracion del metodo update 
-        private PointF _mapPosition;
 
         #endregion
         #region Events
@@ -42,6 +41,16 @@ namespace MarioBros.Core
         public int FPS { get; set; } = 1;
 
         /// <summary>
+        /// Rectangulo que ocupa el personaje en el mapa
+        /// </summary>
+        public RectangleF MapPositionRec { get; private set; }
+
+        /// <summary>
+        /// Indica que el objeto sera removido del mapa
+        /// </summary>
+        public bool Removing { get; set; }
+
+        /// <summary>
         /// Rectangulo a dibujar en el cuadro actual
         /// </summary>
         public Rectangle SourceRectangle { get { return SourceRectangles[_index]; } }
@@ -70,16 +79,7 @@ namespace MarioBros.Core
                 // desencadena el evento indicando que el objeto se desplazo en el mapa
             }
         }
-
-        /// <summary>
-        /// Rectangulo que ocupa el personaje en el mapa
-        /// </summary>
-        public RectangleF MapPositionRec { get; private set; }
-
-        /// <summary>
-        /// Indica que el objeto sera removido del mapa
-        /// </summary>
-        public bool Removing { get; set; }
+        private PointF _mapPosition;
 
         #endregion
         #region Methods
@@ -102,7 +102,7 @@ namespace MarioBros.Core
         {
             var _rect = new Rectangle[locations.Length];
 
-            for (int i = 0; i < locations.Length; i++)
+            for (var i = 0; i < locations.Length; i++)
             {
                 _rect[i] = new Rectangle(locations[i], size);
             }
@@ -145,8 +145,15 @@ namespace MarioBros.Core
 
         public virtual void Update(GameTime gameTime)
         {
-            //this.MapPosition = new PointF(this.MapPosition.X + Velocity.X, this.MapPosition.Y + Velocity.Y);
-            this.Animation(gameTime);
+            Animation(gameTime);
+        }
+
+        /// <summary>
+        /// Valida la colicion del con otro objeto
+        /// </summary>
+        /// <param name="obj"></param>
+        public virtual void CheckCollision(Base obj, PointF prevPosition)
+        {
         }
 
         #endregion
@@ -154,7 +161,7 @@ namespace MarioBros.Core
 
         public override void Draw(DrawHandler drawHandler)
         {
-            drawHandler.Draw(base.Image, this.SourceRectangle, (int)base.Position.X, (int)base.Position.Y, DirectionState == Direction.Left);
+            drawHandler.Draw(base.Image, SourceRectangle, (int)base.Position.X, (int)base.Position.Y, DirectionState == Direction.Left);
         }
 
         #endregion

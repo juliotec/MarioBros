@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Game.Elements
+namespace MarioBros.Core
 {
     public class GameTime
     {
+        #region Constructors
+
         public GameTime()
         {
             StartDate =
             FrameDate = DateTime.Now;
         }
+
+        #endregion
+        #region Properties
 
         /// <summary>
         /// Fecha y hora de inicio del juego
@@ -30,5 +31,7 @@ namespace Game.Elements
         /// Milisegundos transcurridos entre el cuadro actual y el anterior
         /// </summary>
         public int FrameMilliseconds { get; set; }
+
+        #endregion
     }
 }

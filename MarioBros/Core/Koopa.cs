@@ -22,10 +22,10 @@ namespace MarioBros.Elements.Objects
             );
 
             SourceRectangles = SourceRec_Normal;
-            this.Velocity = new PointF(-2, 0);
-            this.FPS = 6;
+            Velocity = new PointF(-2, 0);
+            FPS = 6;
 
-            this.MapPosition = new PointF(obj.X, (int)obj.Y - resources.Map_Data.Tileheight);
+            MapPosition = new PointF(obj.X, (int)obj.Y - resources.Map_Data.Tileheight);
         }
         #endregion
 

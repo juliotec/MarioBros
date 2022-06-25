@@ -54,7 +54,7 @@ namespace MarioBros.Core
         {
             if (Visible)
             {
-                drawHandler.Draw(this.Image, new Point((int)this.Position.X, (int)this.Position.Y));
+                drawHandler.Draw(Image, new Point((int)Position.X, (int)Position.Y));
             }
         }
 

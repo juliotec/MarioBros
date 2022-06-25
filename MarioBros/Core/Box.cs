@@ -1,73 +1,76 @@
 ﻿using System;
 using System.Drawing;
+using MarioBros.Entities;
 
-namespace MarioBros.Elements.Objects
+namespace MarioBros.Core
 {
     public class Box : Base, IGravity
     {
-        #region Objects
-        private BoxState _state;
+        #region Fields
+
         private PointF? _originalPosition;
-        public event EventHandler DropCoin;
+
         #endregion
+        #region Constructors
 
-        #region Constructor
-        public Box(Elements.Resources resources, Data.BaseObject obj)
+        public Box(Resources resources, BaseObject obj)
         {
-            base.Image = resources.SpriteSheet;
+            var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
 
-            Size _recSize = new Size(resources.Map_Data.Tilewidth, resources.Map_Data.Tileheight);
-            SourceRec_Normal = base.Create_Rectangles(_recSize,
-                new Point(320, 0),
-                new Point(320, 64),
-                new Point(320, 128),
-                new Point(320, 64),
-                new Point(320, 0)
-            );
-            SourceRec_Empty = base.Create_Rectangles(_recSize, new Point(224, 64));
-
+            base.Image = resources.SpriteSheet;            
+            SourceRecNormal = base.CreateRectangles(_recSize, new Point(320, 0), new Point(320, 64), new Point(320, 128), new Point(320, 64), new Point(320, 0));
+            SourceRecEmpty = base.CreateRectangles(_recSize, new Point(224, 64));
             State = BoxState.Normal;
-            this.FPS = 8;
-
-            this._originalPosition = new PointF(obj.X, (int)obj.Y - resources.Map_Data.Tileheight);
-            this.MapPosition = _originalPosition.Value;
+            FPS = 8;
+            _originalPosition = new PointF(obj.X, (int)obj.Y - resources.Map.TileHeight);
+            MapPosition = _originalPosition.Value;
         }
         #endregion
+        #region Events
 
+        public event EventHandler DropCoin;
+
+        #endregion
         #region Properties
+
+        private Rectangle[] SourceRecNormal { get; set; }
+        private Rectangle[] SourceRecEmpty { get; set; }
+        private Rectangle[] SourceRecCoin { get; set; }
+
         public BoxState State
         {
             get { return _state; }
             set
             {
                 _state = value;
-                SourceRectangles = value == BoxState.Normal ? SourceRec_Normal : SourceRec_Empty;
+                SourceRectangles = value == BoxState.Normal ? SourceRecNormal : SourceRecEmpty;
                 ResetAnimation();
             }
         }
-        private Rectangle[] SourceRec_Normal { get; set; }
-        private Rectangle[] SourceRec_Empty { get; set; }
-        private Rectangle[] SourceRec_Coin { get; set; }
+        private BoxState _state;
+
         public override PointF MapPosition
         {
             get => base.MapPosition;
             set => base.MapPosition = new PointF(value.X, Math.Min(value.Y, _originalPosition.Value.Y));
         }
-        #endregion
 
-        #region Methods
-        public override void Check_Collision(Base obj, PointF prevPosition)
+        #endregion
+        #region Base
+
+        public override void CheckCollision(Base obj, PointF prevPosition)
         {
             var difPosition = new PointF(obj.MapPosition.X - prevPosition.X, obj.MapPosition.Y - prevPosition.Y); // diferencia entre la posicion actual y anterior
+
             if (difPosition.Y > 0)
             {
                 obj.Velocity = new PointF(obj.Velocity.X, 0);
-                obj.MapPosition = new PointF(obj.MapPosition.X, this.MapPosition.Y - obj.SourceRectangle.Height);
+                obj.MapPosition = new PointF(obj.MapPosition.X, MapPosition.Y - obj.SourceRectangle.Height);
             }
             else if (difPosition.Y < 0)
             {
                 obj.Velocity = new PointF(obj.Velocity.X, 0);
-                obj.MapPosition = new PointF(obj.MapPosition.X, this.MapPosition.Y + obj.SourceRectangle.Height);
+                obj.MapPosition = new PointF(obj.MapPosition.X, MapPosition.Y + obj.SourceRectangle.Height);
 
                 if (State == BoxState.Normal)
                 {
@@ -79,22 +82,15 @@ namespace MarioBros.Elements.Objects
             else if (difPosition.X > 0)
             {
                 obj.Velocity = new PointF(0, obj.Velocity.Y);
-                obj.MapPosition = new PointF(this.MapPosition.X - obj.SourceRectangle.Width, obj.MapPosition.Y);
+                obj.MapPosition = new PointF(MapPosition.X - obj.SourceRectangle.Width, obj.MapPosition.Y);
             }
             else if (difPosition.X < 0)
             {
                 obj.Velocity = new PointF(0, obj.Velocity.Y);
-                obj.MapPosition = new PointF(this.MapPosition.X + obj.SourceRectangle.Width, obj.MapPosition.Y);
+                obj.MapPosition = new PointF(MapPosition.X + obj.SourceRectangle.Width, obj.MapPosition.Y);
             }
         }
-        #endregion
 
-        #region Structures
-        public enum BoxState
-        {
-            Normal,
-            Empty
-        }
         #endregion
     }
 }
