@@ -1,4 +1,4 @@
-﻿namespace MarioBros.Core
+﻿namespace MarioBros.Engine
 {
     public class TileSet
     {

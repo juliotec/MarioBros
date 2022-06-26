@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
-using MarioBros.Core;
 
-namespace MarioBros.Entities
+namespace MarioBros.Engine
 {
     public class Koopa : BaseEntity
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     public class Map
     {

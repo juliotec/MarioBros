@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     public class LayerObstacles
     {

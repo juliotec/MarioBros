@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     /// <summary>
     /// Clase que carga los recursos del juego

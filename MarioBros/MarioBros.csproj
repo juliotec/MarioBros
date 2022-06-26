@@ -50,29 +50,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\DrawHandler.cs" />
-    <Compile Include="Core\GameTime.cs" />
-    <Compile Include="Core\Keyboard.cs" />
-    <Compile Include="Core\PositionEventArgs.cs" />
-    <Compile Include="Core\Sprite.cs" />
-    <Compile Include="Core\Layer.cs" />
-    <Compile Include="Core\TileSet.cs" />
-    <Compile Include="Core\BaseObject.cs" />
-    <Compile Include="Core\Map.cs" />
-    <Compile Include="Core\LayerObstacles.cs" />
-    <Compile Include="Core\LayerTiles.cs" />
-    <Compile Include="Core\MapHandler.cs" />
-    <Compile Include="Core\BaseEntity.cs" />
-    <Compile Include="Entities\Coin.cs" />
-    <Compile Include="Core\IGravity.cs" />
-    <Compile Include="Entities\Koopa.cs" />
-    <Compile Include="Entities\Goomba.cs" />
-    <Compile Include="Entities\Box.cs" />
-    <Compile Include="Entities\Brick.cs" />
-    <Compile Include="Core\LayerObjects.cs" />
-    <Compile Include="Core\Mario.cs" />
-    <Compile Include="Core\Resources.cs" />
-    <Compile Include="Core\Enums.cs" />
+    <Compile Include="Engine\DrawHandler.cs" />
+    <Compile Include="Engine\GameTime.cs" />
+    <Compile Include="Engine\Keyboard.cs" />
+    <Compile Include="Engine\PositionEventArgs.cs" />
+    <Compile Include="Engine\Sprite.cs" />
+    <Compile Include="Engine\Layer.cs" />
+    <Compile Include="Engine\TileSet.cs" />
+    <Compile Include="Engine\BaseObject.cs" />
+    <Compile Include="Engine\Map.cs" />
+    <Compile Include="Engine\LayerObstacles.cs" />
+    <Compile Include="Engine\LayerTiles.cs" />
+    <Compile Include="Engine\MapHandler.cs" />
+    <Compile Include="Engine\BaseEntity.cs" />
+    <Compile Include="Engine\Coin.cs" />
+    <Compile Include="Engine\Koopa.cs" />
+    <Compile Include="Engine\Goomba.cs" />
+    <Compile Include="Engine\Box.cs" />
+    <Compile Include="Engine\Brick.cs" />
+    <Compile Include="Engine\LayerObjects.cs" />
+    <Compile Include="Engine\Mario.cs" />
+    <Compile Include="Engine\Resources.cs" />
+    <Compile Include="Engine\Enums.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

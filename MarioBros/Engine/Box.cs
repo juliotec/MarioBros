@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using MarioBros.Core;
 
-namespace MarioBros.Entities
+namespace MarioBros.Engine
 {
-    public class Brick : BaseEntity, IGravity
+    public class Box : BaseEntity
     {
         #region Fields
 
@@ -13,21 +12,40 @@ namespace MarioBros.Entities
         #endregion
         #region Constructors
 
-        public Brick(Resources resources, BaseObject obj)
+        public Box(Resources resources, BaseObject obj)
         {
             var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
 
-            base.Image = resources.SpriteSheet;
-            SourceRecNormal = base.CreateRectangles(_recSize, new Point(224, 0));
-            SourceRectangles = SourceRecNormal;
+            base.Image = resources.SpriteSheet;            
+            SourceRecNormal = base.CreateRectangles(_recSize, new Point(320, 0), new Point(320, 64), new Point(320, 128), new Point(320, 64), new Point(320, 0));
+            SourceRecEmpty = base.CreateRectangles(_recSize, new Point(224, 64));
+            State = BoxState.Normal;
+            FPS = 8;
             _originalPosition = new PointF(obj.X, (int)obj.Y - resources.Map.TileHeight);
             MapPosition = _originalPosition.Value;
         }
+        #endregion
+        #region Events
+
+        public event EventHandler DropCoin;
 
         #endregion
         #region Properties
 
         private Rectangle[] SourceRecNormal { get; set; }
+        private Rectangle[] SourceRecEmpty { get; set; }
+
+        public BoxState State
+        {
+            get { return _state; }
+            set
+            {
+                _state = value;
+                SourceRectangles = value == BoxState.Normal ? SourceRecNormal : SourceRecEmpty;
+                ResetAnimation();
+            }
+        }
+        private BoxState _state;
 
         public override PointF MapPosition
         {
@@ -52,7 +70,12 @@ namespace MarioBros.Entities
                 obj.Velocity = new PointF(obj.Velocity.X, 0);
                 obj.MapPosition = new PointF(obj.MapPosition.X, MapPosition.Y + obj.SourceRectangle.Height);
 
-                Velocity = new PointF(Velocity.X, -10);
+                if (State == BoxState.Normal)
+                {
+                    State = BoxState.Empty;
+                    DropCoin(this, EventArgs.Empty);
+                    Velocity = new PointF(Velocity.X, -10);
+                }
             }
             else if (difPosition.X > 0)
             {
@@ -65,6 +88,7 @@ namespace MarioBros.Entities
                 obj.MapPosition = new PointF(MapPosition.X + obj.SourceRectangle.Width, obj.MapPosition.Y);
             }
         }
+
+        #endregion
     }
-    #endregion
 }

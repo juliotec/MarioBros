@@ -1,9 +1,8 @@
 ﻿using System.Drawing;
-using MarioBros.Core;
 
-namespace MarioBros.Entities
+namespace MarioBros.Engine
 {
-    public class Goomba : BaseEntity, IGravity
+    public class Goomba : BaseEntity
     {
         #region Fields
 

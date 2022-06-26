@@ -1,9 +1,8 @@
 ﻿using System.Drawing;
-using MarioBros.Core;
 
-namespace MarioBros.Entities
+namespace MarioBros.Engine
 {
-    public class Coin : BaseEntity, IGravity
+    public class Coin : BaseEntity
     {
         #region Fields
 

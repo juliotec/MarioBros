@@ -1,4 +1,4 @@
-﻿namespace MarioBros.Core
+﻿namespace MarioBros.Engine
 {
     /// <summary>
     /// Direccion hacia donde mira el personaje

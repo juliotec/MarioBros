@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     public class BaseEntity : Sprite
     {

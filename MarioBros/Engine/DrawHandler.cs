@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     /// <summary>
     /// Clase con la logica de dibujado

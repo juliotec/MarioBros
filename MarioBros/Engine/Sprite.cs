@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     /// <summary>
     /// Sprite que se dibujara en pantalla

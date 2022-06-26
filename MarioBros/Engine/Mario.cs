@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
-    public class Mario : BaseEntity, IGravity
+    public class Mario : BaseEntity
     {
         #region Events
 

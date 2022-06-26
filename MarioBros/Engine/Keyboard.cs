@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     /// <summary>
     /// Teclas habilitadas en el juego

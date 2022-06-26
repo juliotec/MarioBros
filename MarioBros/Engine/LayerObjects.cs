@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using MarioBros.Entities;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     public class LayerObjects : Sprite
     {

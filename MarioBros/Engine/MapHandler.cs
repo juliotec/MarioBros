@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace MarioBros.Core
+namespace MarioBros.Engine
 {
     public class MapHandler
     {
