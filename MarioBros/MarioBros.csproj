@@ -50,42 +50,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BaseForm.Designer.cs">
-      <DependentUpon>BaseForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Core\DrawHandler.cs" />
     <Compile Include="Core\GameTime.cs" />
     <Compile Include="Core\Keyboard.cs" />
     <Compile Include="Core\PositionEventArgs.cs" />
     <Compile Include="Core\Sprite.cs" />
-    <Compile Include="Entities\Layer.cs" />
-    <Compile Include="Entities\TileSet.cs" />
-    <Compile Include="Entities\BaseObject.cs" />
-    <Compile Include="Entities\Map.cs" />
-    <Compile Include="Entities\Keyboard.cs" />
-    <Compile Include="Core\Layer_Obstacles.cs" />
-    <Compile Include="Core\Layer_Tiles.cs" />
+    <Compile Include="Core\Layer.cs" />
+    <Compile Include="Core\TileSet.cs" />
+    <Compile Include="Core\BaseObject.cs" />
+    <Compile Include="Core\Map.cs" />
+    <Compile Include="Core\LayerObstacles.cs" />
+    <Compile Include="Core\LayerTiles.cs" />
     <Compile Include="Core\MapHandler.cs" />
-    <Compile Include="Core\Base.cs" />
-    <Compile Include="Core\Coin.cs" />
+    <Compile Include="Core\BaseEntity.cs" />
+    <Compile Include="Entities\Coin.cs" />
     <Compile Include="Core\IGravity.cs" />
-    <Compile Include="Core\Koopa.cs" />
-    <Compile Include="Core\Goomba.cs" />
-    <Compile Include="Core\Box.cs" />
-    <Compile Include="Core\Brick.cs" />
-    <Compile Include="Core\Layer_Objects.cs" />
+    <Compile Include="Entities\Koopa.cs" />
+    <Compile Include="Entities\Goomba.cs" />
+    <Compile Include="Entities\Box.cs" />
+    <Compile Include="Entities\Brick.cs" />
+    <Compile Include="Core\LayerObjects.cs" />
     <Compile Include="Core\Mario.cs" />
-    <Compile Include="Entities\Resources.cs" />
-    <Compile Include="Entities\Enums.cs" />
-    <Compile Include="GameForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GameForm.Designer.cs">
-      <DependentUpon>GameForm.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Core\Resources.cs" />
+    <Compile Include="Core\Enums.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,12 +81,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="BaseForm.resx">
-      <DependentUpon>BaseForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GameForm.resx">
-      <DependentUpon>GameForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

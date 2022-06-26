@@ -22,14 +22,14 @@ namespace MarioBros.Core
         #region Properties
 
         /// <summary>
-        /// Imagen base sobre la cual se dibujan las demas imagenes
-        /// </summary>
-        public Image BaseImage { get; private set; }
-
-        /// <summary>
         /// Clase con funciones de dibujado
         /// </summary>
         private Graphics Graphics { get; set; }
+
+        /// <summary>
+        /// Imagen base sobre la cual se dibujan las demas imagenes
+        /// </summary>
+        public Image BaseImage { get; private set; }
 
         #endregion
         #region Methods
@@ -72,7 +72,7 @@ namespace MarioBros.Core
 
                 using (var _graphics = Graphics.FromImage(_image))
                 {
-                    _graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                    _graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
                     _graphics.DrawImage(image, 0, 0, rectangle, GraphicsUnit.Pixel);
                 }
 

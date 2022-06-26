@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
-using MarioBros.Entities;
+using MarioBros.Core;
 
-namespace MarioBros.Core
+namespace MarioBros.Entities
 {
-    public class Box : Base, IGravity
+    public class Box : BaseEntity, IGravity
     {
         #region Fields
 
@@ -35,7 +35,6 @@ namespace MarioBros.Core
 
         private Rectangle[] SourceRecNormal { get; set; }
         private Rectangle[] SourceRecEmpty { get; set; }
-        private Rectangle[] SourceRecCoin { get; set; }
 
         public BoxState State
         {
@@ -58,7 +57,7 @@ namespace MarioBros.Core
         #endregion
         #region Base
 
-        public override void CheckCollision(Base obj, PointF prevPosition)
+        public override void CheckCollision(BaseEntity obj, PointF prevPosition)
         {
             var difPosition = new PointF(obj.MapPosition.X - prevPosition.X, obj.MapPosition.Y - prevPosition.Y); // diferencia entre la posicion actual y anterior
 

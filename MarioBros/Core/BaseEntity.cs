@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using MarioBros.Entities;
 
 namespace MarioBros.Core
 {
-    public class Base : Sprite
+    public class BaseEntity : Sprite
     {
         #region Fields
         
@@ -100,14 +99,27 @@ namespace MarioBros.Core
         /// <returns></returns>
         protected Rectangle[] CreateRectangles(Size size, params Point[] locations)
         {
-            var _rect = new Rectangle[locations.Length];
+            var rect = new Rectangle[locations.Length];
 
             for (var i = 0; i < locations.Length; i++)
             {
-                _rect[i] = new Rectangle(locations[i], size);
+                rect[i] = new Rectangle(locations[i], size);
             }
 
-            return _rect;
+            return rect;
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+            Animation(gameTime);
+        }
+
+        /// <summary>
+        /// Valida la colicion del con otro objeto
+        /// </summary>
+        /// <param name="obj"></param>
+        public virtual void CheckCollision(BaseEntity obj, PointF prevPosition)
+        {
         }
 
         /// <summary>
@@ -143,25 +155,12 @@ namespace MarioBros.Core
             _mapPosition = new PointF(_mapPosition.X + x, _mapPosition.Y + y);
         }
 
-        public virtual void Update(GameTime gameTime)
-        {
-            Animation(gameTime);
-        }
-
-        /// <summary>
-        /// Valida la colicion del con otro objeto
-        /// </summary>
-        /// <param name="obj"></param>
-        public virtual void CheckCollision(Base obj, PointF prevPosition)
-        {
-        }
-
         #endregion
         #region Sprite
 
         public override void Draw(DrawHandler drawHandler)
         {
-            drawHandler.Draw(base.Image, SourceRectangle, (int)base.Position.X, (int)base.Position.Y, DirectionState == Direction.Left);
+            drawHandler.Draw(Image, SourceRectangle, (int)Position.X, (int)Position.Y, DirectionState == Direction.Left);
         }
 
         #endregion

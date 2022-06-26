@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
-using MarioBros.Entities;
+using MarioBros.Core;
 
-namespace MarioBros.Core
+namespace MarioBros.Entities
 {
-    public class Coin : Base, IGravity
+    public class Coin : BaseEntity, IGravity
     {
         #region Fields
 

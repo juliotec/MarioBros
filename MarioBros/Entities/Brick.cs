@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
-using MarioBros.Entities;
+using MarioBros.Core;
 
-namespace MarioBros.Core
+namespace MarioBros.Entities
 {
-    public class Brick : Base, IGravity
+    public class Brick : BaseEntity, IGravity
     {
         #region Fields
 
@@ -38,7 +38,7 @@ namespace MarioBros.Core
         #endregion
         #region Base
 
-        public override void CheckCollision(Base obj, PointF prevPosition)
+        public override void CheckCollision(BaseEntity obj, PointF prevPosition)
         {
             var difPosition = new PointF(obj.MapPosition.X - prevPosition.X, obj.MapPosition.Y - prevPosition.Y); // diferencia entre la posicion actual y anterior
 

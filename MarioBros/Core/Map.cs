@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace MarioBros.Entities
+namespace MarioBros.Core
 {
     public class Map
     {
+        #region Properties
+
         public string BackgroundColor { get; set; }
         public int Height { get; set; }
         public bool Infinite { get; set; }
@@ -19,5 +21,7 @@ namespace MarioBros.Entities
         public string Type { get; set; }
         public double Version { get; set; }
         public int Width { get; set; }
+
+        #endregion
     }
 }

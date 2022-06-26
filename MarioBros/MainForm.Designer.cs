@@ -28,32 +28,43 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            ((System.ComponentModel.ISupportInitialize)(Canvas)).BeginInit();
-            SuspendLayout();
+            this.Canvas = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
+            this.SuspendLayout();
             // 
             // Canvas
             // 
-            Canvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            Canvas.Image = ((System.Drawing.Image)(resources.GetObject("Canvas.Image")));
-            Canvas.Location = new System.Drawing.Point(0, 0);
-            Canvas.Size = new System.Drawing.Size(788, 450);
+            this.Canvas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Canvas.Location = new System.Drawing.Point(0, 0);
+            this.Canvas.Margin = new System.Windows.Forms.Padding(5);
+            this.Canvas.Name = "Canvas";
+            this.Canvas.Size = new System.Drawing.Size(1051, 554);
+            this.Canvas.TabIndex = 0;
+            this.Canvas.TabStop = false;
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(788, 450);
-            Name = "MainForm";
-            Text = "Form1";
-            KeyDown += new System.Windows.Forms.KeyEventHandler(Demo_KeyDown);
-            KeyUp += new System.Windows.Forms.KeyEventHandler(Demo_KeyUp);
-            ((System.ComponentModel.ISupportInitialize)(Canvas)).EndInit();
-            ResumeLayout(false);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1051, 554);
+            this.Controls.Add(this.Canvas);
+            this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(5);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "MainForm";
+            this.Text = "Form1";
+            this.Load += new System.EventHandler(this.MainFormLoad);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainFormKeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainFormKeyUp);
+            ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
+            this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        protected System.Windows.Forms.PictureBox Canvas;
     }
 }
 

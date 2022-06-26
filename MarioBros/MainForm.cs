@@ -1,21 +1,56 @@
-﻿using Game.Elements;
-using System;
+﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
-using MarioBros.Entities;
+using Newtonsoft.Json;
+using MarioBros.Core;
 
 namespace MarioBros
 {
-    public partial class MainForm : Game.Game
+    public partial class MainForm : Form
     {
-        #region Constructor
+        #region Fields
+
+        private readonly GameTime _gameTime;
+        /// <summary>
+        /// Timer que refresca la imagen del juego
+        /// </summary>
+        private readonly Timer _timer;
+
+        #endregion
+        #region Constructors
+
         public MainForm()
         {
             InitializeComponent();
             Initialize();
-        }
-        #endregion
+            _gameTime = new GameTime();
+            Keyboard = new Keyboard();
+            _timer = new Timer
+            {
+                Interval = 1000 / 30 // 60 PFS (el intervalo no siempre se respeta en winforms)
+            };
+            _timer.Tick += (sender, e) =>
+            {
+                var now = DateTime.Now;
 
+                _gameTime.FrameMilliseconds = (int)(now - _gameTime.FrameDate).TotalMilliseconds;
+                _gameTime.FrameDate = now;
+                Application.DoEvents();
+                Update(_gameTime);  // ejecuta logica propia del juego
+                Keyboard.Clear();
+
+                using (DrawHandler drawHandler = new DrawHandler(Canvas.Width, Canvas.Height))
+                {
+                    Draw(drawHandler);    // Actualiza la imagen en cada cuadro
+                    Canvas.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
+                }
+            };
+        }
+
+        #endregion
         #region Properties
+
         /// <summary>
         /// Recursos graficos del juego
         /// </summary>
@@ -23,88 +58,140 @@ namespace MarioBros
         /// <summary>
         /// C
         /// </summary>
-        public Elements.Map.MapHandler MapHandler { get; set; }
-        #endregion
+        public MapHandler MapHandler { get; set; }
+        /// <summary>
+        /// Informacion de teclas precionadas
+        /// </summary>
+        protected Keyboard Keyboard { get; set; }
 
+        #endregion
         #region Methods
+
         /// <summary>
         /// Carga los recursos graficos del juego
         /// </summary>
         private void Initialize()
         {
-            string directory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
+            var directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
 
-            Resources = new  Resources()
+            Resources = new Resources()
             {
-                SpriteSheet = Load_Image($"{directory}/TileSet.png"),
-                Map = Newtonsoft.Json.JsonConvert.DeserializeObject<Map>(Load_Text($"{directory}/Level_1_1.json"))
+                SpriteSheet = LoadImage($"{directory}/TileSet.png"),
+                Map = JsonConvert.DeserializeObject<Map>(LoadText($"{directory}/Level_1_1.json"))
             };
-
-            Canvas.BackColor = System.Drawing.ColorTranslator.FromHtml(Resources.Map.BackgroundColor);
+            Canvas.BackColor = ColorTranslator.FromHtml(Resources.Map.BackgroundColor);
             InitializeMap();
         }
+
         /// <summary>
         /// Carga el mapa
         /// </summary>
         private void InitializeMap()
         {
-            MapHandler = new Elements.Map.MapHandler(Resources, Canvas.Size);
+            MapHandler = new MapHandler(Resources, Canvas.Size);
             MapHandler.Restart += (obj, e) => InitializeMap(); // reinicia el mapa
         }
-        #endregion
 
-        #region Events
-        private void btnInfo_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Carga un texto
+        /// </summary>
+        /// <param name="path">ruta del archivo a cargar</param>
+        /// <returns></returns>
+        private string LoadText(string path)
         {
-            base.Open_ZeroSoft_URL();
+            try
+            {
+                using (var sr = new StreamReader(path))
+                {
+                    return sr.ReadToEnd().Trim();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Load File Error\n" + path);
+
+                return null;
+            }
         }
-        private void Demo_KeyDown(object sender, KeyEventArgs e)
+
+        /// <summary>
+        /// Carga una imagen 
+        /// </summary>
+        /// <param name="path">ruta de la imagen a cargar</param>
+        /// <returns></returns>
+        private Image LoadImage(string path)
         {
-            if (e.KeyCode == Keys.Left)
-                Elements.Keyboard.Left = true;
+            try
+            {
+                return Image.FromFile(path);
+            }
+            catch
+            {
+                MessageBox.Show("Load File Error\n" + path);
 
-            if (e.KeyCode == Keys.Right)
-                Elements.Keyboard.Right = true;
-
-            if (e.KeyCode == Keys.Z)
-                Elements.Keyboard.Turbo = true;
-
-            if (e.KeyCode == Keys.X)
-                Elements.Keyboard.Jump = true;
+                return null;
+            }
         }
-        private void Demo_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Left)
-                Elements.Keyboard.Left = false;
 
-            if (e.KeyCode == Keys.Right)
-                Elements.Keyboard.Right = false;
-
-            if (e.KeyCode == Keys.Z)
-                Elements.Keyboard.Turbo = false;
-
-            if (e.KeyCode == Keys.X)
-                Elements.Keyboard.Jump = false;
-        }
-        #endregion
-
-        #region Update
-        protected override void Update(GameTime gameTime)
+        private void Update(GameTime gameTime)
         {
             MapHandler.Update(gameTime);
         }
-        #endregion
 
-        #region Draw
         /// <summary>
         /// Dibuja la grilla
         /// </summary>
         /// <param name="drawHandler"></param>
-        public override void Draw(DrawHandler drawHandler)
+        private void Draw(DrawHandler drawHandler)
         {
             MapHandler.Draw(drawHandler);
         }
-        #endregion
 
+        private void MainFormKeyDown(object sender, KeyEventArgs e)
+        {
+            Keyboard.SetKey(e.KeyData);
+
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    Keyboard.IsLeft = true;
+                    break;
+                case Keys.Right:
+                    Keyboard.IsRight = true;
+                    break;
+                case Keys.Z:
+                    Keyboard.IsTurbo = true;
+                    break;
+                case Keys.X:
+                    Keyboard.IsJump = true;
+                    break;
+            }
+        }
+
+        private void MainFormKeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    Keyboard.IsLeft = false;
+                    break;
+                case Keys.Right:
+                    Keyboard.IsRight = false;
+                    break;
+                case Keys.Z:
+                    Keyboard.IsTurbo = false;
+                    break;
+                case Keys.X:
+                    Keyboard.IsJump = false;
+                    break;
+            }
+        }
+
+        private void MainFormLoad(object sender, EventArgs e)
+        {
+            _timer.Start(); // inicia el juego
+        }
+
+        #endregion
     }
 }

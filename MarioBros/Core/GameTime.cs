@@ -8,8 +8,7 @@ namespace MarioBros.Core
 
         public GameTime()
         {
-            StartDate =
-            FrameDate = DateTime.Now;
+            StartDate = FrameDate = DateTime.Now;
         }
 
         #endregion
