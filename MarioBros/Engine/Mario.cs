@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace MarioBros.Engine
 {
-    public class Mario : BaseEntity
+    public class Mario : BaseEntity, IGravity
     {
         #region Events
 

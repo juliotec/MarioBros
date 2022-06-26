@@ -2,7 +2,7 @@
 
 namespace MarioBros.Engine
 {
-    public class Koopa : BaseEntity
+    public class Koopa : BaseEntity, IGravity
     {
         #region Constructors
 

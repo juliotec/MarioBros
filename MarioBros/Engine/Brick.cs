@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace MarioBros.Engine
 {
-    public class Brick : BaseEntity
+    public class Brick : BaseEntity, IGravity
     {
         #region Fields
 

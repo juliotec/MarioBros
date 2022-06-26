@@ -2,7 +2,7 @@
 
 namespace MarioBros.Engine
 {
-    public class Coin : BaseEntity
+    public class Coin : BaseEntity, IGravity
     {
         #region Fields
 

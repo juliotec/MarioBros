@@ -2,7 +2,7 @@
 
 namespace MarioBros.Engine
 {
-    public class Goomba : BaseEntity
+    public class Goomba : BaseEntity, IGravity
     {
         #region Fields
 

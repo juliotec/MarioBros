@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Engine\DrawHandler.cs" />
     <Compile Include="Engine\GameTime.cs" />
+    <Compile Include="Engine\IGravity.cs" />
     <Compile Include="Engine\Keyboard.cs" />
     <Compile Include="Engine\PositionEventArgs.cs" />
     <Compile Include="Engine\Sprite.cs" />
