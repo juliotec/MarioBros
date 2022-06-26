@@ -29,10 +29,19 @@ namespace MarioBros.Engine
         /// <summary>
         /// Imagen base sobre la cual se dibujan las demas imagenes
         /// </summary>
-        public Image BaseImage { get; private set; }
+        public Image? BaseImage { get; private set; }
 
         #endregion
         #region Methods
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Graphics.Dispose();
+                BaseImage = null;
+            }
+        }
 
         /// <summary>
         /// Dibuja una imagen en pantalla
@@ -90,8 +99,8 @@ namespace MarioBros.Engine
 
         public void Dispose()
         {
-            Graphics.Dispose();
-            BaseImage = null;
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion

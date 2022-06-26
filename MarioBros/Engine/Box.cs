@@ -14,11 +14,16 @@ namespace MarioBros.Engine
 
         public Box(Resources resources, BaseObject obj)
         {
+            if (resources.Map == null || resources.SpriteSheet == null)
+            {
+                throw new NullReferenceException();
+            }
+
             var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
 
-            base.Image = resources.SpriteSheet;            
-            SourceRecNormal = base.CreateRectangles(_recSize, new Point(320, 0), new Point(320, 64), new Point(320, 128), new Point(320, 64), new Point(320, 0));
-            SourceRecEmpty = base.CreateRectangles(_recSize, new Point(224, 64));
+            Image = resources.SpriteSheet;            
+            SourceRecNormal = CreateRectangles(_recSize, new Point(320, 0), new Point(320, 64), new Point(320, 128), new Point(320, 64), new Point(320, 0));
+            SourceRecEmpty = CreateRectangles(_recSize, new Point(224, 64));
             State = BoxState.Normal;
             FPS = 8;
             _originalPosition = new PointF(obj.X, (int)obj.Y - resources.Map.TileHeight);
@@ -27,13 +32,13 @@ namespace MarioBros.Engine
         #endregion
         #region Events
 
-        public event EventHandler DropCoin;
+        public event EventHandler? DropCoin;
 
         #endregion
         #region Properties
 
-        private Rectangle[] SourceRecNormal { get; set; }
-        private Rectangle[] SourceRecEmpty { get; set; }
+        private Rectangle[]? SourceRecNormal { get; set; }
+        private Rectangle[]? SourceRecEmpty { get; set; }
 
         public BoxState State
         {
@@ -50,11 +55,11 @@ namespace MarioBros.Engine
         public override PointF MapPosition
         {
             get => base.MapPosition;
-            set => base.MapPosition = new PointF(value.X, Math.Min(value.Y, _originalPosition.Value.Y));
+            set => base.MapPosition = _originalPosition == null ? default : new PointF(value.X, Math.Min(value.Y, _originalPosition.Value.Y));
         }
 
         #endregion
-        #region Base
+        #region BaseEntity
 
         public override void CheckCollision(BaseEntity obj, PointF prevPosition)
         {
@@ -73,7 +78,7 @@ namespace MarioBros.Engine
                 if (State == BoxState.Normal)
                 {
                     State = BoxState.Empty;
-                    DropCoin(this, EventArgs.Empty);
+                    DropCoin?.Invoke(this, EventArgs.Empty);
                     Velocity = new PointF(Velocity.X, -10);
                 }
             }

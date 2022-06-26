@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace MarioBros.Engine
 {
@@ -30,7 +31,7 @@ namespace MarioBros.Engine
         /// <summary>
         /// Imagen a dibujar
         /// </summary>
-        public Image Image { get; set; }
+        public Image? Image { get; set; }
 
         /// <summary>
         /// Posicion en pantalla donde se dibujara la imagen
@@ -52,6 +53,11 @@ namespace MarioBros.Engine
         /// <param name="g">Clase con metodos de dibujado</param>
         public virtual void Draw(DrawHandler drawHandler)
         {
+            if (Image == null)
+            {
+                throw new NullReferenceException();
+            }
+
             if (Visible)
             {
                 drawHandler.Draw(Image, new Point((int)Position.X, (int)Position.Y));

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace MarioBros.Engine
 {
@@ -7,18 +8,23 @@ namespace MarioBros.Engine
         #region Fields
 
         private GoombaState _state;
-        private int miliseconsDying;
+        private int _miliseconsDying;
 
         #endregion
         #region Constructors
 
         public Goomba(Resources resources, BaseObject obj)
         {
+            if (resources.Map == null || resources.SpriteSheet == null)
+            {
+                throw new NullReferenceException();
+            }
+
             var recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
 
             Image = resources.SpriteSheet;
-            SourceRecNormal = base.CreateRectangles(recSize, new Point(0, 480), new Point(32, 480));
-            SourceRecDying = base.CreateRectangles(recSize, new Point(64, 480));
+            SourceRecNormal = CreateRectangles(recSize, new Point(0, 480), new Point(32, 480));
+            SourceRecDying = CreateRectangles(recSize, new Point(64, 480));
             MapPosition = new PointF(obj.X, obj.Y - resources.Map.TileHeight);
             Velocity = new PointF(-2, 0);
             FPS = 6;
@@ -28,8 +34,8 @@ namespace MarioBros.Engine
         #endregion
         #region Properties
 
-        private Rectangle[] SourceRecNormal { get; set; }
-        private Rectangle[] SourceRecDying { get; set; }
+        private Rectangle[]? SourceRecNormal { get; set; }
+        private Rectangle[]? SourceRecDying { get; set; }
 
         public GoombaState State
         {
@@ -43,7 +49,7 @@ namespace MarioBros.Engine
         }
 
         #endregion
-        #region Base
+        #region BaseEntity
 
         public override void CheckCollision(BaseEntity obj, PointF prevPosition)
         {
@@ -81,9 +87,9 @@ namespace MarioBros.Engine
             if (State == GoombaState.Dying)
             {
                 // contador antes de desaparecer
-                miliseconsDying += gameTime.FrameMilliseconds;
+                _miliseconsDying += gameTime.FrameMilliseconds;
 
-                if (miliseconsDying >= 1000)
+                if (_miliseconsDying >= 1000)
                 {
                     Removing = true;
                 }                    

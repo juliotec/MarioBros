@@ -12,8 +12,8 @@ namespace MarioBros.Engine
         /// <summary>
         /// Bloque de la grilla Vacio
         /// </summary>
-        public Image SpriteSheet { get; set; }
-        public Map Map { get; set; }
+        public Image? SpriteSheet { get; set; }
+        public Map? Map { get; set; }
 
         #endregion
     }

@@ -33,18 +33,15 @@ namespace MarioBros
             _timer.Tick += (sender, e) =>
             {
                 var now = DateTime.Now;
+                using var drawHandler = new DrawHandler(Canvas.Width, Canvas.Height);
 
                 _gameTime.FrameMilliseconds = (int)(now - _gameTime.FrameDate).TotalMilliseconds;
                 _gameTime.FrameDate = now;
                 Application.DoEvents();
                 Update(_gameTime);  // ejecuta logica propia del juego
                 Keyboard.Clear();
-
-                using (DrawHandler drawHandler = new DrawHandler(Canvas.Width, Canvas.Height))
-                {
-                    Draw(drawHandler);    // Actualiza la imagen en cada cuadro
-                    Canvas.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
-                }
+                Draw(drawHandler);    // Actualiza la imagen en cada cuadro
+                Canvas.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
             };
         }
 
@@ -54,11 +51,11 @@ namespace MarioBros
         /// <summary>
         /// Recursos graficos del juego
         /// </summary>
-        public Resources Resources { get; set; }
+        public Resources? Resources { get; set; }
         /// <summary>
         /// C
         /// </summary>
-        public MapHandler MapHandler { get; set; }
+        public MapHandler? MapHandler { get; set; }
         /// <summary>
         /// Informacion de teclas precionadas
         /// </summary>
@@ -68,49 +65,21 @@ namespace MarioBros
         #region Methods
 
         /// <summary>
-        /// Carga los recursos graficos del juego
-        /// </summary>
-        private void Initialize()
-        {
-            var directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
-
-            Resources = new Resources()
-            {
-                SpriteSheet = LoadImage($"{directory}/TileSet.png"),
-                Map = JsonConvert.DeserializeObject<Map>(LoadText($"{directory}/Level_1_1.json"))
-            };
-            Canvas.BackColor = ColorTranslator.FromHtml(Resources.Map.BackgroundColor);
-            InitializeMap();
-        }
-
-        /// <summary>
-        /// Carga el mapa
-        /// </summary>
-        private void InitializeMap()
-        {
-            MapHandler = new MapHandler(Resources, Canvas.Size);
-            MapHandler.Restart += (obj, e) => InitializeMap(); // reinicia el mapa
-        }
-
-        /// <summary>
         /// Carga un texto
         /// </summary>
         /// <param name="path">ruta del archivo a cargar</param>
         /// <returns></returns>
-        private string LoadText(string path)
+        private static string LoadText(string path)
         {
             try
             {
-                using (var sr = new StreamReader(path))
-                {
-                    return sr.ReadToEnd().Trim();
-                }
+                return new StreamReader(path).ReadToEnd().Trim();
             }
             catch
             {
                 MessageBox.Show("Load File Error\n" + path);
 
-                return null;
+                return string.Empty;
             }
         }
 
@@ -119,7 +88,7 @@ namespace MarioBros
         /// </summary>
         /// <param name="path">ruta de la imagen a cargar</param>
         /// <returns></returns>
-        private Image LoadImage(string path)
+        private static Image? LoadImage(string path)
         {
             try
             {
@@ -133,8 +102,50 @@ namespace MarioBros
             }
         }
 
+        /// <summary>
+        /// Carga los recursos graficos del juego
+        /// </summary>
+        private void Initialize()
+        {
+            var directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
+
+            Resources = new Resources()
+            {
+                SpriteSheet = LoadImage($"{directory}/TileSet.png"),
+                Map = JsonConvert.DeserializeObject<Map>(LoadText($"{directory}/Level_1_1.json"))
+            };
+
+            if (Resources.Map == null || Resources.Map.BackgroundColor == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            Canvas.BackColor = ColorTranslator.FromHtml(Resources.Map.BackgroundColor);
+
+            InitializeMap();
+        }
+
+        /// <summary>
+        /// Carga el mapa
+        /// </summary>
+        private void InitializeMap()
+        {
+            if (Resources == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            MapHandler = new MapHandler(Resources, Canvas.Size);
+            MapHandler.Restart += (obj, e) => InitializeMap(); // reinicia el mapa
+        }
+
         private void Update(GameTime gameTime)
         {
+            if (MapHandler == null)
+            {
+                throw new NullReferenceException();
+            }
+
             MapHandler.Update(gameTime);
         }
 
@@ -144,6 +155,11 @@ namespace MarioBros
         /// <param name="drawHandler"></param>
         private void Draw(DrawHandler drawHandler)
         {
+            if (MapHandler == null)
+            {
+                throw new NullReferenceException();
+            }
+
             MapHandler.Draw(drawHandler);
         }
 
@@ -189,6 +205,11 @@ namespace MarioBros
 
         private void MainFormLoad(object sender, EventArgs e)
         {
+            if (DesignMode)
+            {
+                return;
+            }
+
             _timer.Start(); // inicia el juego
         }
 

@@ -13,7 +13,7 @@ namespace MarioBros.Engine
         #endregion
         #region Events
 
-        public event EventHandler<PositionEventArgs> MapPositionChanged;
+        public event EventHandler<PositionEventArgs>? MapPositionChanged;
 
         #endregion
         #region Properties
@@ -21,7 +21,7 @@ namespace MarioBros.Engine
         /// <summary>
         /// Lista de rectangulos que componen la animacion actual
         /// </summary>
-        protected Rectangle[] SourceRectangles { get; set; }
+        protected Rectangle[]? SourceRectangles { get; set; }
 
         /// <summary>
         /// Direccion hacia donde mira el personaje
@@ -52,7 +52,7 @@ namespace MarioBros.Engine
         /// <summary>
         /// Rectangulo a dibujar en el cuadro actual
         /// </summary>
-        public Rectangle SourceRectangle { get { return SourceRectangles[_index]; } }
+        public Rectangle SourceRectangle { get { return SourceRectangles == null ? default : SourceRectangles[_index]; } }
 
         /// <summary>
         /// Posision del objeto en el mapa
@@ -84,20 +84,12 @@ namespace MarioBros.Engine
         #region Methods
 
         /// <summary>
-        /// Reinicia la animacion
-        /// </summary>
-        protected void ResetAnimation()
-        {
-            _index = 0;
-        }
-
-        /// <summary>
         /// Crea la coleccion de rectangulos que componen una animacion
         /// </summary>
         /// <param name="size">tamaño de los rectangulos</param>
         /// <param name="locations">ubicacion de los rectangulos</param>
         /// <returns></returns>
-        protected Rectangle[] CreateRectangles(Size size, params Point[] locations)
+        protected static Rectangle[] CreateRectangles(Size size, params Point[] locations)
         {
             var rect = new Rectangle[locations.Length];
 
@@ -107,6 +99,14 @@ namespace MarioBros.Engine
             }
 
             return rect;
+        }
+
+        /// <summary>
+        /// Reinicia la animacion
+        /// </summary>
+        protected void ResetAnimation()
+        {
+            _index = 0;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -134,7 +134,7 @@ namespace MarioBros.Engine
             {
                 _milisec = 0;
 
-                if (_index < SourceRectangles.Length - 1)
+                if (SourceRectangles != null && _index < SourceRectangles.Length - 1)
                 {
                     _index++; // si el el estado actual posee mas cuadros, adelanto 1
                 }

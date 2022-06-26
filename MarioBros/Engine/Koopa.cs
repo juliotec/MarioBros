@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace MarioBros.Engine
 {
@@ -8,6 +9,11 @@ namespace MarioBros.Engine
 
         public Koopa(Resources resources, BaseObject obj)
         {
+            if (resources.Map == null || resources.SpriteSheet == null)
+            {
+                throw new NullReferenceException();
+            }
+
             Image = resources.SpriteSheet;
             SourceRecNormal = CreateRectangles(new Size(resources.Map.TileWidth, resources.Map.TileHeight * 2), new Point(224, 384), new Point(256, 384));
             SourceRectangles = SourceRecNormal;
@@ -19,9 +25,8 @@ namespace MarioBros.Engine
         #endregion
         #region Properties
 
-        private Rectangle[] SourceRecNormal { get; set; }
+        private Rectangle[]? SourceRecNormal { get; set; }
 
         #endregion
-
     }
 }

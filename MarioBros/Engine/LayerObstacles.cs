@@ -11,7 +11,12 @@ namespace MarioBros.Engine
 
         public LayerObstacles(Resources resources)
         {
-            var layerTiles = resources.Map.Layers.FirstOrDefault(x => x.Name == "Obstacles");
+            if (resources.Map == null || resources.SpriteSheet == null || resources.Map.Layers == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            var layerTiles = resources.Map.Layers.First(x => x.Name == "Obstacles");
             List<int> columns;
 
             TileSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
@@ -19,7 +24,12 @@ namespace MarioBros.Engine
             Matrix = new bool[layerTiles.Height, layerTiles.Width];
 
             for (var i = 0; i < layerTiles.Height; i++)
-            {
+            { 
+                if (layerTiles.Data == null)
+                {
+                    continue;
+                }
+
                 columns = layerTiles.Data.Skip(i * layerTiles.Width).Take(layerTiles.Width).ToList();
 
                 for (var j = 0; j < layerTiles.Width; j++)
@@ -39,7 +49,7 @@ namespace MarioBros.Engine
         /// <summary>
         /// Matriz con la informacion de obstaculos
         /// </summary>
-        private bool[,] Matrix { get; set; }
+        private bool[,]? Matrix { get; set; }
         /// <summary>
         /// Tamaño del mapa en cantidad de celdas
         /// </summary>
@@ -48,7 +58,7 @@ namespace MarioBros.Engine
         #endregion
         #region Methods
 
-        private PointF GetPositionAdjust(RectangleF colArea, PointF difPosition)
+        private static PointF GetPositionAdjust(RectangleF colArea, PointF difPosition)
         {
             float _x =
                 difPosition.X < 0 ? colArea.Width :
@@ -75,7 +85,7 @@ namespace MarioBros.Engine
                 return false;
             }
 
-            return Matrix[row, col];
+            return Matrix != null && Matrix[row, col];
         }
 
         public void ValidColition(BaseEntity obj, PointF prevPosition)

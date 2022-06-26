@@ -11,16 +11,21 @@ namespace MarioBros.Engine
 
         public LayerTiles(Resources resources, Size canvasSize)
         {
+            if (resources.Map == null || resources.SpriteSheet == null || resources.Map.Layers == null)
+            {
+                throw new NullReferenceException();
+            }
+
             List<int> columns;
 
             Position = Point.Empty;
             Image = resources.SpriteSheet;
             TileSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
             Size = new Size(resources.Map.Width, resources.Map.Height);
-
             // Carga los tiles del mapa
             Tiles = new Dictionary<int, Rectangle>();
-            Size tileSetSize = new Size(resources.SpriteSheet.Width / TileSize.Width, resources.SpriteSheet.Height / TileSize.Height);
+            
+            var tileSetSize = new Size(resources.SpriteSheet.Width / TileSize.Width, resources.SpriteSheet.Height / TileSize.Height);
 
             for (var i = 0; i < tileSetSize.Height; i++)
             {
@@ -31,12 +36,17 @@ namespace MarioBros.Engine
             }
 
             // Carga matriz de tiles
-            var layerTiles = resources.Map.Layers.FirstOrDefault(x => x.Name == "Tiles");
+            var layerTiles = resources.Map.Layers.First(x => x.Name == "Tiles");
 
             Matrix = new int[layerTiles.Height, layerTiles.Width];
 
             for (var i = 0; i < layerTiles.Height; i++)
             {
+                if (layerTiles.Data == null)
+                {
+                    continue;
+                }
+
                 columns = layerTiles.Data.Skip(i * layerTiles.Width).Take(layerTiles.Width).ToList();
 
                 for (var j = 0; j < layerTiles.Width; j++)
@@ -57,11 +67,11 @@ namespace MarioBros.Engine
         /// <summary>
         /// Diccionario con los tiles asociados a su respectivo ID
         /// </summary>
-        private Dictionary<int, Rectangle> Tiles { get; set; }
+        private Dictionary<int, Rectangle>? Tiles { get; set; }
         /// <summary>
         /// Matriz con la informacion grafica del mapa
         /// </summary>
-        private int[,] Matrix { get; set; }
+        private int[,]? Matrix { get; set; }
         /// <summary>
         /// Tamaño de la pantalla en celdas (celdas del mapa visibles)
         /// </summary>
@@ -76,7 +86,8 @@ namespace MarioBros.Engine
         public Size TileSize { get; private set; }
 
         #endregion
-        #region Methods
+        #region Sprite
+
         public override void Draw(DrawHandler drawHandler)
         {
             var startX = (int)Math.Floor((float)Position.X / TileSize.Width); // coordenada en x de la primera celda a dibujar
@@ -88,7 +99,7 @@ namespace MarioBros.Engine
                 {
                     if (i >= 0 && i < Size.Width)
                     {
-                        if (Matrix[j, i] != 0)
+                        if (Matrix != null && Matrix[j, i] != 0 && Tiles != null)
                         {
                             drawHandler.Draw(Image, Tiles[Matrix[j, i]], new Point((int)(i * TileSize.Width - Position.X), (int)(j * TileSize.Height - Position.Y)));
                         }

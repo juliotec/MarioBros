@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace MarioBros.Engine
 {
@@ -13,16 +14,21 @@ namespace MarioBros.Engine
 
         public Coin(Resources resources)
         {
+            if (resources.Map == null || resources.SpriteSheet == null)
+            {
+                throw new NullReferenceException();
+            }
+
             var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
 
-            base.Image = resources.SpriteSheet;
-            SourceRectangles = base.CreateRectangles(_recSize, new Point(256, 192), new Point(288, 192), new Point(320, 192), new Point(352, 192));
+            Image = resources.SpriteSheet;
+            SourceRectangles = CreateRectangles(_recSize, new Point(256, 192), new Point(288, 192), new Point(320, 192), new Point(352, 192));
             Velocity = new PointF(0, -20);
             FPS = 6;
         }
 
         #endregion
-        #region Base
+        #region BaseEntity
 
         public override void Update(GameTime gameTime)
         {

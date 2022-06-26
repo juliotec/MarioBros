@@ -7,13 +7,18 @@ namespace MarioBros.Engine
     {
         #region Events
 
-        public event EventHandler Died;
+        public event EventHandler? Died;
 
         #endregion
         #region Constructors
 
         public Mario(Resources resources, BaseObject obj)
         {
+            if (resources.Map == null || resources.SpriteSheet == null)
+            {
+                throw new NullReferenceException();
+            }
+
             var recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
 
             Image = resources.SpriteSheet;
@@ -256,7 +261,7 @@ namespace MarioBros.Engine
         {
             ActionState = MarioAction.Die; // cambia el estado para mostrar el sprite correspondiente
             Velocity = new PointF(Velocity.X, -20); // cambia velocidad para mostrar el salto de muerte
-            Died(this, EventArgs.Empty); // notifica al controlador del juego que mario murio para cambiar el estado del juego
+            Died?.Invoke(this, EventArgs.Empty); // notifica al controlador del juego que mario murio para cambiar el estado del juego
         }
 
         #endregion

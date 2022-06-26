@@ -15,7 +15,7 @@ namespace MarioBros.Engine
         #endregion
         #region Events
 
-        public event EventHandler Restart;
+        public event EventHandler? Restart;
 
         #endregion
         #region Constructors
@@ -26,6 +26,11 @@ namespace MarioBros.Engine
             LayerTiles = new LayerTiles(resources, canvasSize);
             LayerObstacles = new LayerObstacles(resources);
             LayerObjects = new LayerObjects(resources, canvasSize);
+
+            if (LayerObjects.MapObjects == null || LayerObjects.Mario == null)
+            {
+                throw new NullReferenceException();
+            }
 
             for (var i = 0; i < LayerObjects.MapObjects.Count; i++)
             {
@@ -65,6 +70,11 @@ namespace MarioBros.Engine
 
         private void UpdatePlaying(GameTime gameTime)
         {
+            if (LayerObjects.MapObjects == null || LayerObjects.MapObjectsNew == null || LayerObjects.Mario == null)
+            {
+                throw new NullReferenceException();
+            }
+
             _canvasRec = new RectangleF(LayerTiles.Position.X, LayerTiles.Position.Y, _canvasSize.Width, _canvasSize.Height);
 
             var lstRemove = new List<BaseEntity>();
@@ -122,6 +132,11 @@ namespace MarioBros.Engine
 
         private void UpdateDying()
         {
+            if (LayerObjects.Mario == null)
+            {
+                throw new NullReferenceException();
+            }
+
             // muestra la animacion de mario muriendo
             LayerObjects.Mario.Velocity = new PointF(LayerObjects.Mario.Velocity.X, LayerObjects.Mario.Velocity.Y + _gravity);
             LayerObjects.Mario.MapPosition = new PointF(LayerObjects.Mario.MapPosition.X, LayerObjects.Mario.MapPosition.Y + LayerObjects.Mario.Velocity.Y);
@@ -132,6 +147,11 @@ namespace MarioBros.Engine
 
         private void UpdateWinning(GameTime gameTime)
         {
+            if (LayerObjects.Mario == null)
+            {
+                throw new NullReferenceException();
+            }
+
             LayerObjects.Mario.Velocity = new PointF(LayerObjects.Mario.Velocity.X, LayerObjects.Mario.Velocity.Y + _gravity);
             LayerObjects.Mario.MapPosition = new PointF(LayerObjects.Mario.MapPosition.X + LayerObjects.Mario.Velocity.X, LayerObjects.Mario.MapPosition.Y);
             LayerObjects.Mario.MapPosition = new PointF(LayerObjects.Mario.MapPosition.X, LayerObjects.Mario.MapPosition.Y + LayerObjects.Mario.Velocity.Y);
@@ -147,18 +167,18 @@ namespace MarioBros.Engine
 
             if (LayerObjects.Mario.MapPosition.X >= ((LayerTiles.Size.Width - 1) * LayerTiles.TileSize.Width))
             {
-                Restart(null, EventArgs.Empty); // reinicia el mapa
+                Restart?.Invoke(null, EventArgs.Empty); // reinicia el mapa
             }
         }
 
         /// <summary>
         /// Actualiza la posicion en pantalla de los objetos del mapa
         /// </summary>
-        private void UpdateObjectPosition(BaseEntity mapObject = null)
+        private void UpdateObjectPosition(BaseEntity? mapObject = null)
         {
             var objects = mapObject != null ? new List<BaseEntity>() { mapObject } : LayerObjects.MapObjects;
 
-            for (var i = 0; i < objects.Count; i++)
+            for (var i = 0; i < objects?.Count; i++)
             {
                 objects[i].Position = new PointF(objects[i].MapPosition.X - LayerTiles.Position.X, objects[i].MapPosition.Y - LayerTiles.Position.Y);
             }
@@ -169,6 +189,11 @@ namespace MarioBros.Engine
         /// </summary>
         private void MoveCharacter()
         {
+            if (LayerObjects.Mario == null)
+            {
+                throw new NullReferenceException();
+            }
+
             if (LayerObjects.Mario.Position.X > _canvasSize.Width / 2)
             {
                 var maxPositionWidth = LayerTiles.Size.Width * LayerTiles.TileSize.Width - _canvasSize.Width;
@@ -190,8 +215,13 @@ namespace MarioBros.Engine
             }
         }
 
-        private void ObjectsMapPositionChanged(object sender, PositionEventArgs e)
+        private void ObjectsMapPositionChanged(object? sender, PositionEventArgs e)
         {
+            if (sender == null)
+            {
+                throw new NullReferenceException();
+            }
+
             if (State == GameState.Playing || State == GameState.Wining)
             {
                 // valida la colicion del objeto con las celdas bloqueadas del mapa
@@ -202,7 +232,7 @@ namespace MarioBros.Engine
             }
         }
 
-        private void MarioDied(object sender, EventArgs e)
+        private void MarioDied(object? sender, EventArgs e)
         {
             State = GameState.Dying; // al detectar que mario murio, cambia el estado del juego
         }
@@ -219,6 +249,11 @@ namespace MarioBros.Engine
 
         public void Update(GameTime gameTime)
         {
+            if (LayerObjects.Mario == null)
+            {
+                throw new NullReferenceException();
+            }
+
             switch (State)
             {
                 case GameState.Playing:
@@ -234,7 +269,7 @@ namespace MarioBros.Engine
 
             if (LayerObjects.Mario.Position.Y > (_canvasSize.Height * 2))
             {
-                Restart(null, EventArgs.Empty);
+                Restart?.Invoke(null, EventArgs.Empty);
                 // si mario se cae a un poso o completa el mapa, se reinicia 
             }
         }
