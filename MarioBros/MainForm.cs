@@ -16,6 +16,14 @@ namespace MarioBros
         /// Timer que refresca la imagen del juego
         /// </summary>
         private readonly Timer _timer;
+        /// <summary>
+        /// Recursos graficos del juego
+        /// </summary>
+        private Resources? _resources;
+        /// <summary>
+        /// Manejador del Mapa
+        /// </summary>
+        private MapHandler? _mapHandler;
 
         #endregion
         #region Constructors
@@ -23,43 +31,31 @@ namespace MarioBros
         public MainForm()
         {
             InitializeComponent();
-            Initialize();
+
+            var directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
+
+            _resources = new Resources()
+            {
+                SpriteSheet = LoadImage($"{directory}/TileSet.png"),
+                Map = JsonConvert.DeserializeObject<Map>(LoadText($"{directory}/Level_1_1.json"))
+            };
+
+            if (_resources.Map == null || _resources.Map.BackgroundColor == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            Canvas.BackColor = ColorTranslator.FromHtml(_resources.Map.BackgroundColor);
+
+            InitializeMap();
+
             _gameTime = new GameTime();
-            Keyboard = new Keyboard();
             _timer = new Timer
             {
-                Interval = 1000 / 30 // 60 PFS (el intervalo no siempre se respeta en winforms)
+                Interval = 1000 / 30 // 60 FPS (el intervalo no siempre se respeta en winforms)
             };
-            _timer.Tick += (sender, e) =>
-            {
-                var now = DateTime.Now;
-                using var drawHandler = new DrawHandler(Canvas.Width, Canvas.Height);
-
-                _gameTime.FrameMilliseconds = (int)(now - _gameTime.FrameDate).TotalMilliseconds;
-                _gameTime.FrameDate = now;
-                Application.DoEvents();
-                Update(_gameTime);  // ejecuta logica propia del juego
-                Keyboard.Clear();
-                Draw(drawHandler);    // Actualiza la imagen en cada cuadro
-                Canvas.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
-            };
+            _timer.Tick += TimerTick;
         }
-
-        #endregion
-        #region Properties
-
-        /// <summary>
-        /// Recursos graficos del juego
-        /// </summary>
-        public Resources? Resources { get; set; }
-        /// <summary>
-        /// C
-        /// </summary>
-        public MapHandler? MapHandler { get; set; }
-        /// <summary>
-        /// Informacion de teclas precionadas
-        /// </summary>
-        protected Keyboard Keyboard { get; set; }
 
         #endregion
         #region Methods
@@ -103,50 +99,27 @@ namespace MarioBros
         }
 
         /// <summary>
-        /// Carga los recursos graficos del juego
-        /// </summary>
-        private void Initialize()
-        {
-            var directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
-
-            Resources = new Resources()
-            {
-                SpriteSheet = LoadImage($"{directory}/TileSet.png"),
-                Map = JsonConvert.DeserializeObject<Map>(LoadText($"{directory}/Level_1_1.json"))
-            };
-
-            if (Resources.Map == null || Resources.Map.BackgroundColor == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            Canvas.BackColor = ColorTranslator.FromHtml(Resources.Map.BackgroundColor);
-
-            InitializeMap();
-        }
-
-        /// <summary>
         /// Carga el mapa
         /// </summary>
         private void InitializeMap()
         {
-            if (Resources == null)
+            if (_resources == null)
             {
                 throw new NullReferenceException();
             }
 
-            MapHandler = new MapHandler(Resources, Canvas.Size);
-            MapHandler.Restart += (obj, e) => InitializeMap(); // reinicia el mapa
+            _mapHandler = new MapHandler(_resources, Canvas.Size);
+            _mapHandler.Restart += (obj, e) => InitializeMap(); // reinicia el mapa
         }
 
         private void Update(GameTime gameTime)
         {
-            if (MapHandler == null)
+            if (_mapHandler == null)
             {
                 throw new NullReferenceException();
             }
 
-            MapHandler.Update(gameTime);
+            _mapHandler.Update(gameTime);
         }
 
         /// <summary>
@@ -155,18 +128,29 @@ namespace MarioBros
         /// <param name="drawHandler"></param>
         private void Draw(DrawHandler drawHandler)
         {
-            if (MapHandler == null)
+            if (_mapHandler == null)
             {
                 throw new NullReferenceException();
             }
 
-            MapHandler.Draw(drawHandler);
+            _mapHandler.Draw(drawHandler);
+        }
+
+        private void TimerTick(object? sender, EventArgs e)
+        {
+            var now = DateTime.Now;
+            using var drawHandler = new DrawHandler(Canvas.Width, Canvas.Height);
+
+            _gameTime.FrameMilliseconds = (int)(now - _gameTime.FrameDate).TotalMilliseconds;
+            _gameTime.FrameDate = now;
+            Application.DoEvents();
+            Update(_gameTime);  // ejecuta logica propia del juego
+            Draw(drawHandler);  // actualiza la imagen en cada cuadro
+            Canvas.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
         }
 
         private void MainFormKeyDown(object sender, KeyEventArgs e)
         {
-            Keyboard.SetKey(e.KeyData);
-
             switch (e.KeyCode)
             {
                 case Keys.Left:

@@ -160,6 +160,11 @@ namespace MarioBros.Engine
 
         public override void Draw(DrawHandler drawHandler)
         {
+            if (Image == null)
+            {
+                return;
+            }
+
             drawHandler.Draw(Image, SourceRectangle, (int)Position.X, (int)Position.Y, DirectionState == Direction.Left);
         }
 

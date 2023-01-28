@@ -69,6 +69,7 @@ namespace MarioBros.Engine
                 obj.MapPosition = new PointF(MapPosition.X + obj.SourceRectangle.Width, obj.MapPosition.Y);
             }
         }
+
+        #endregion
     }
-    #endregion
 }

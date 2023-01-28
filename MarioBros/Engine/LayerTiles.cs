@@ -90,6 +90,11 @@ namespace MarioBros.Engine
 
         public override void Draw(DrawHandler drawHandler)
         {
+            if (Image == null)
+            {
+                return;
+            }
+
             var startX = (int)Math.Floor((float)Position.X / TileSize.Width); // coordenada en x de la primera celda a dibujar
             var startY = (int)Math.Floor((float)Position.Y / TileSize.Height); // coordenada en y de la primera celda a dibujar
 
