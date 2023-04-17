@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using MarioBros.Engine;
 
-namespace MarioBros.Engine
+namespace MarioBros.Entities
 {
     public class Mario : BaseEntity, IGravity
     {
@@ -101,7 +102,7 @@ namespace MarioBros.Engine
                     SourceRectangles = SourceRecSmallFlag;
                     break;
             };
-            
+
             ResetAnimation();
         }
 
@@ -132,7 +133,7 @@ namespace MarioBros.Engine
 
             // TURBO
             // duplico la velocidad cuando el personaje corre
-            if (Keyboard.IsTurbo) 
+            if (Keyboard.IsTurbo)
             {
                 aceleration *= 2;
                 maxAceleration *= 2;
@@ -233,15 +234,15 @@ namespace MarioBros.Engine
             if (ActionState != MarioAction.Jump && !Keyboard.IsRight && !Keyboard.IsLeft)
             {
                 float velX;
-                
-                if (Math.Abs(Velocity.X) < (aceleration * 2))
+
+                if (Math.Abs(Velocity.X) < aceleration * 2)
                 {
                     velX = 0;
                 }
                 else
                 {
-                    velX = (Velocity.X > 0 ? -(aceleration * 2) : Velocity.X < 0 ? (aceleration * 2) : 0) + Velocity.X;
-                }                
+                    velX = (Velocity.X > 0 ? -(aceleration * 2) : Velocity.X < 0 ? aceleration * 2 : 0) + Velocity.X;
+                }
 
                 Velocity = new PointF((float)Math.Round(velX, 2), Velocity.Y);
             }

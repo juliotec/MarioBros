@@ -19,7 +19,7 @@ namespace MarioBros
         /// <summary>
         /// Recursos graficos del juego
         /// </summary>
-        private Resources? _resources;
+        private readonly Resources? _resources;
         /// <summary>
         /// Manejador del Mapa
         /// </summary>
@@ -45,7 +45,7 @@ namespace MarioBros
                 throw new NullReferenceException();
             }
 
-            Canvas.BackColor = ColorTranslator.FromHtml(_resources.Map.BackgroundColor);
+            _pictureBox.BackColor = ColorTranslator.FromHtml(_resources.Map.BackgroundColor);
 
             InitializeMap();
 
@@ -108,7 +108,7 @@ namespace MarioBros
                 throw new NullReferenceException();
             }
 
-            _mapHandler = new MapHandler(_resources, Canvas.Size);
+            _mapHandler = new MapHandler(_resources, _pictureBox.Size);
             _mapHandler.Restart += (obj, e) => InitializeMap(); // reinicia el mapa
         }
 
@@ -139,14 +139,14 @@ namespace MarioBros
         private void TimerTick(object? sender, EventArgs e)
         {
             var now = DateTime.Now;
-            using var drawHandler = new DrawHandler(Canvas.Width, Canvas.Height);
+            using var drawHandler = new DrawHandler(_pictureBox.Width, _pictureBox.Height);
 
             _gameTime.FrameMilliseconds = (int)(now - _gameTime.FrameDate).TotalMilliseconds;
             _gameTime.FrameDate = now;
             Application.DoEvents();
             Update(_gameTime);  // ejecuta logica propia del juego
             Draw(drawHandler);  // actualiza la imagen en cada cuadro
-            Canvas.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
+            _pictureBox.Image = drawHandler.BaseImage; // asigna la imagen del nuevo cuadro al picture box
         }
 
         private void MainFormKeyDown(object sender, KeyEventArgs e)

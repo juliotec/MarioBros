@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using MarioBros.Engine;
 
-namespace MarioBros.Engine
+namespace MarioBros.Entities
 {
     public class Goomba : BaseEntity, IGravity
     {
@@ -92,7 +93,7 @@ namespace MarioBros.Engine
                 if (_miliseconsDying >= 1000)
                 {
                     Removing = true;
-                }                    
+                }
             }
 
             base.Update(gameTime);

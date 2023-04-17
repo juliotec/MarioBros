@@ -28,43 +28,42 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Canvas = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
-            this.SuspendLayout();
+            _pictureBox = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)_pictureBox).BeginInit();
+            SuspendLayout();
             // 
-            // Canvas
+            // _pictureBox
             // 
-            this.Canvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Canvas.Location = new System.Drawing.Point(0, 0);
-            this.Canvas.Margin = new System.Windows.Forms.Padding(0);
-            this.Canvas.Name = "Canvas";
-            this.Canvas.Size = new System.Drawing.Size(882, 448);
-            this.Canvas.TabIndex = 0;
-            this.Canvas.TabStop = false;
+            _pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            _pictureBox.Location = new System.Drawing.Point(0, 0);
+            _pictureBox.Margin = new System.Windows.Forms.Padding(0);
+            _pictureBox.Name = "_pictureBox";
+            _pictureBox.Size = new System.Drawing.Size(882, 448);
+            _pictureBox.TabIndex = 0;
+            _pictureBox.TabStop = false;
             // 
             // MainForm
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(882, 448);
-            this.Controls.Add(this.Canvas);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "MainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Mario Bros";
-            this.Load += new System.EventHandler(this.MainFormLoad);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainFormKeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainFormKeyUp);
-            ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            ClientSize = new System.Drawing.Size(882, 448);
+            Controls.Add(_pictureBox);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            KeyPreview = true;
+            Margin = new System.Windows.Forms.Padding(0);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "MainForm";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Mario Bros";
+            Load += MainFormLoad;
+            KeyDown += MainFormKeyDown;
+            KeyUp += MainFormKeyUp;
+            ((System.ComponentModel.ISupportInitialize)_pictureBox).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
 
-        protected System.Windows.Forms.PictureBox Canvas;
+        protected System.Windows.Forms.PictureBox _pictureBox;
     }
 }

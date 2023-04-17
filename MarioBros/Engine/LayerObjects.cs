@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using MarioBros.Entities;
 
 namespace MarioBros.Engine
 {
@@ -59,9 +60,9 @@ namespace MarioBros.Engine
                     case 6:
                         MapObjects.Add(new Goomba(resources, objects[i]));
                         break;
-                    //case 7:
-                    //    MapObjects.Add(new Koopa(resources, objects[i]));
-                    //    break;
+                    case 7:
+                        MapObjects.Add(new Koopa(resources, objects[i]));
+                        break;
                 }
             };
 

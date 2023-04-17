@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using MarioBros.Engine;
 
-namespace MarioBros.Engine
+namespace MarioBros.Entities
 {
     public class Koopa : BaseEntity, IGravity
     {
@@ -19,7 +20,7 @@ namespace MarioBros.Engine
             SourceRectangles = SourceRecNormal;
             Velocity = new PointF(-2, 0);
             FPS = 6;
-            MapPosition = new PointF(obj.X, (int)obj.Y - resources.Map.TileHeight);
+            MapPosition = new PointF(obj.X, obj.Y - resources.Map.TileHeight);
         }
 
         #endregion

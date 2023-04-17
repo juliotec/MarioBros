@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using MarioBros.Engine;
 
-namespace MarioBros.Engine
+namespace MarioBros.Entities
 {
-    public class Box : BaseEntity, IGravity
+    public class Brick : BaseEntity, IGravity
     {
         #region Fields
 
@@ -12,7 +13,7 @@ namespace MarioBros.Engine
         #endregion
         #region Constructors
 
-        public Box(Resources resources, BaseObject obj)
+        public Brick(Resources resources, BaseObject obj)
         {
             if (resources.Map == null || resources.SpriteSheet == null)
             {
@@ -21,36 +22,17 @@ namespace MarioBros.Engine
 
             var _recSize = new Size(resources.Map.TileWidth, resources.Map.TileHeight);
 
-            Image = resources.SpriteSheet;            
-            SourceRecNormal = CreateRectangles(_recSize, new Point(320, 0), new Point(320, 64), new Point(320, 128), new Point(320, 64), new Point(320, 0));
-            SourceRecEmpty = CreateRectangles(_recSize, new Point(224, 64));
-            State = BoxState.Normal;
-            FPS = 8;
-            _originalPosition = new PointF(obj.X, (int)obj.Y - resources.Map.TileHeight);
+            Image = resources.SpriteSheet;
+            SourceRecNormal = CreateRectangles(_recSize, new Point(224, 0));
+            SourceRectangles = SourceRecNormal;
+            _originalPosition = new PointF(obj.X, obj.Y - resources.Map.TileHeight);
             MapPosition = _originalPosition.Value;
         }
-        #endregion
-        #region Events
-
-        public event EventHandler? DropCoin;
 
         #endregion
         #region Properties
 
         private Rectangle[]? SourceRecNormal { get; set; }
-        private Rectangle[]? SourceRecEmpty { get; set; }
-
-        public BoxState State
-        {
-            get { return _state; }
-            set
-            {
-                _state = value;
-                SourceRectangles = value == BoxState.Normal ? SourceRecNormal : SourceRecEmpty;
-                ResetAnimation();
-            }
-        }
-        private BoxState _state;
 
         public override PointF MapPosition
         {
@@ -75,12 +57,7 @@ namespace MarioBros.Engine
                 obj.Velocity = new PointF(obj.Velocity.X, 0);
                 obj.MapPosition = new PointF(obj.MapPosition.X, MapPosition.Y + obj.SourceRectangle.Height);
 
-                if (State == BoxState.Normal)
-                {
-                    State = BoxState.Empty;
-                    DropCoin?.Invoke(this, EventArgs.Empty);
-                    Velocity = new PointF(Velocity.X, -10);
-                }
+                Velocity = new PointF(Velocity.X, -10);
             }
             else if (difPosition.X > 0)
             {
